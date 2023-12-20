@@ -1,13 +1,16 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Login from './Components/Student/Login/Login'
-import Register from './Components/Student/Register/Register'
+import LoginOF from './Components/Officer/Login/Login';
+import RegisterOF from './Components/Officer/Register/Register';
+import ForgotPassOF  from './Components/Officer/Login/ForgotPass';
 
 const App = () => {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            {/* path = "แสดงหน้าหลักของ officer "*/}
+            <Route path="/" element={<LoginOF />} />
+            <Route path="/registerOF" element={<RegisterOF />} />
+            <Route path="/forgotpassOF" element={<ForgotPassOF />} />
         </Routes>
     )
 }

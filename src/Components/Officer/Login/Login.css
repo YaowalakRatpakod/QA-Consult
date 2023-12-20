@@ -1,0 +1,148 @@
+/* font */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Sarabun', sans-serif;
+    background: #081F5C;
+}
+
+.container {
+    position: fixed;
+    right: 0;
+    width: 35%;
+    height: 100%;
+    background-color: #f7f2eb;
+    border: 2px solid black;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 30px 0 0 50px;
+}
+.img-container{
+    position: fixed;
+    display: flex;
+    width: 450px;
+    height: 488px;
+    left: 185px;
+    top: 104px;
+}
+.img-container img {
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+    margin-top: 100px;
+}
+
+.text {
+    position: relative;
+    left: 100px;
+    top: 10px;
+    color: #081F5C;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.sub-text {
+    color: #7e7878;
+    font-size: 13px;
+}
+
+.inputs {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.input {
+    position: relative;
+    width: 310px;
+    margin: 30px 0;
+    border-bottom: 2px solid #081F5C;
+}
+.input label{
+    position: relative;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #081F5C;
+    pointer-events: none;
+}
+.input input {
+    width: 95%;
+    height: 20px;
+    background: transparent;
+    outline: none;
+}
+
+.sub-text-text {
+    position: absolute;
+    width: 107px;
+    height: 26px;
+    left: 344px;
+    top: 428px;
+    color: #7e7878;
+    font-size: 15px;
+}
+.submit-container {
+    position: absolute;
+    width: 300px;
+    height: 57px;
+    left: 225px;
+    top: 495px;
+}
+.submit-container-3 {
+    position: absolute;
+    width: 300px;
+    height: 57px;
+    left: 225px;
+    top: 340px;
+}
+.submit {
+    position: absolute;
+    width: 195px;
+    height: 57px;
+    left: -47px;
+    color: #FFF;
+    background: #081F5C;
+    border-radius: 49px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.no-account
+{
+    position: absolute;
+    width: 202px;
+    height: 21px;
+    color: #7e7878;
+    font-size: 15px;
+    left: 185px;
+    top: 630px;
+}
+.no-account-2 {
+    position: absolute;
+    width: 202px;
+    height: 21px;
+    color: #7e7878;
+    font-size: 15px;
+    left: 230px;
+    top: 400px;
+}
+
+.no-account span {
+    color: black;
+    cursor: pointer;
+}
+
+/* Responsive Web */
