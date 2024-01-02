@@ -1,14 +1,16 @@
 import React from 'react'
 import Header from '../../Layout/Header/Header'
+import { useNavigate } from 'react-router-dom'
 
 function Dashboard() {
+  const navigate = useNavigate()
   return (
     <div>
       <Header />
       <div className='ltr'>
-        <div className='ms-48 p-4'>รายการขอคำปรึกษา</div>
+        <div className='ms-48 p-4 text-white' >รายการขอคำปรึกษา</div>
         <div className='ms-52 p-1'>
-          <button type="button" className="text-black bg-[#D1E4FF] hover:bg-[#D1E4FF]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 me-2 mb-2">
+          <button onClick={() => navigate ("/createreq")} type="button" className="text-black bg-[#D1E4FF] hover:bg-[#D1E4FF]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 me-2 mb-2">
             {/* <svg aria-hidden="true" class="w-10 h-3 me-2 -ms-1" viewBox="0 0 256 64" fill="none" xmlns="http://www.w3.org/2000/svg"><img d="" fill="white" /></svg> */}
             <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M24.5 26.25H8.75V10.5H19.25V8.75H8.75C7.7875 8.75 7 9.5375 7 10.5V26.25C7 27.2125 7.7875 28 8.75 28H24.5C25.4625 28 26.25 27.2125 26.25 26.25V15.75H24.5V26.25Z" fill="black" />
@@ -24,7 +26,7 @@ function Dashboard() {
           <div className=''>
             <div class="relative overflow-x-auto">
               <table class="w-full text-sm text-left rtl:text-right text-black dark:text-black">
-                <thead class="text-xs text-white uppercase bg-gray-50 dark:bg-[#091F59] dark:text-white-400">
+                <thead class="text-xs text-black uppercase bg-gray-50 dark:bg-[#091F59] dark:text-white-400">
                   <tr>
                     <th scope="col" class="px-6 py-3">
                       รหัสหัวข้อ

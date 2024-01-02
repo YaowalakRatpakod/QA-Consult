@@ -1,7 +1,9 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import forgetpassword from '../../../Picture/forgetpassword.png'
 
 function Forgetpassword() {
+    const navigate = useNavigate();
     return (
         <div className="bg-[#091F59] h-screen flex justify-between">
             <div className='product  flex items-center justify-center w-full h-full bg-[#091F59] '>
@@ -18,7 +20,7 @@ function Forgetpassword() {
                     <button type="button" class="text-white bg-[#091F59] hover:bg-[#091F59] focus:outline-none focus:ring-4 focus:ring-blue-300 font-bold rounded-full text-xs px-5 py-2.5 text-center me-2 mb-2 dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">รีเซ็ตรหัสผ่าน</button>
                 </div>
                 <div className='backlogin'>
-                    <p id="helper-text-explanation" class="mt-[-8.5rem] pr-[117px] text-sm text-gray-500 dark:text-gray-400"><a href="#" class="font-medium text-[#7E7878] hover:underline dark:text-[#7E7878]">กลับหน้าล็อคอิน</a></p>
+                    <p onClick={() => navigate ("/")} id="helper-text-explanation" class="mt-[-8.5rem] pr-[117px] text-sm text-gray-500 dark:text-gray-400"><a href="#" class="font-medium text-[#7E7878] hover:underline dark:text-[#7E7878]">กลับหน้าล็อคอิน</a></p>
                 </div>
             </div>
 
