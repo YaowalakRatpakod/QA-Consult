@@ -1,5 +1,4 @@
 import React from 'react'
-import "./Register.css"
 import register from '/QA-Consult/src/Picture/register.png'
 
 const Register = () => {

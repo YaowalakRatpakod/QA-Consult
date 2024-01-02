@@ -1,11 +1,11 @@
 import React from 'react'
-import forgetpasswoed from '/QA-Consult/src/Picture/forgetpassword.png'
+import forgetpassword from '../../../Picture/forgetpassword.png'
 
 function Forgetpassword() {
     return (
         <div className="bg-[#091F59] h-screen flex justify-between">
             <div className='product  flex items-center justify-center w-full h-full bg-[#091F59] '>
-                <img className='w-96 h-96' src={forgetpasswoed} alt="product" />
+                <img className='w-96 h-96' src={forgetpassword} alt="product" />
             </div>
             <div className='bg-[#f8fafc] h-full w-[70rem] grid justify-items-center rounded-l-lg '>
                 <div className='font-bold text-4xl text-[#091F59] pt-[15rem] my-[-4rem] pr-[8rem]'>ลืม<br />รหัสผ่านของคุณ?</div>
