@@ -1,5 +1,4 @@
 import React from 'react'
-import '../Login/Login.css';
 import officer from '../../../Asset/login-officer.png';
 
 const Login = () => {
