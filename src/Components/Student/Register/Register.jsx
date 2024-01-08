@@ -80,7 +80,7 @@ function Register() {
         <div className='font-regular text-xs text-[#7E7878]'>ให้คำแนะนำและแก้ไขปัญหาได้อย่างรวดเร็ว</div>
         <div className='relative my-0'>
          {/* check ได้ว่ากรอกข้อมูลขึ้นถูกมั้ย  */}
-          <pre>{ JSON.stringify(formValues, undefined,2)}</pre> 
+          {/* <pre>{ JSON.stringify(formValues, undefined,2)}</pre>  */}
           <div className='font-regular text-sm text-[#091F59]'>ชื่อ-นามสกุล
     
             <input type="text" name="fullname" value={formValues.fullname}

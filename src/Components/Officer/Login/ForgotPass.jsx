@@ -1,6 +1,5 @@
 import React from 'react'
 import forgot from '../../../Asset/forgotpass-officer.png'
-import '../Login/Login.css'
 
 const ForgotPass = () => {
     return (
