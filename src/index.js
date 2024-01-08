@@ -4,7 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
+<<<<<<< HEAD
 
+=======
+import Main from './Components/Layout/Main';
+>>>>>>> 1e697c3ed40416360bc070b27743ff290d257b04
 //import Main from './Components/Layout/Main';
 
 

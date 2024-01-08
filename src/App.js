@@ -13,7 +13,10 @@ import Register from './Components/Student/Register/Register'
 import Forgetpassword from './Components/Student/Forgetpassword/Forgetpassword'
 import Dashboard from './Components/Student/Dashboard/Dashboard'
 import Createreq from './Components/Student/Createreq/Createreq'
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1e697c3ed40416360bc070b27743ff290d257b04
 
 const App = () => {
     return (
