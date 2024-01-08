@@ -1,27 +1,29 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,js,jsx}"],
+  content: ["./src/**/*.{html,js,jsx}", 'node_modules/flowbite-react/lib/esm/**/*.js',
+  ],
   theme: {
+    screens: {
+      "2xl": { max: "1535px" },
+      // => @media (max-width: 1535px) { ... }
+
+      xl: { max: "1279px" },
+      // => @media (max-width: 1279px) { ... }
+
+      lg: { max: "1023px" },
+      // => @media (max-width: 1023px) { ... }
+
+      md: { max: "767px" },
+      // => @media (max-width: 767px) { ... }
+
+      sm: { max: "639px" },
+      // => @media (max-width: 639px) { ... }
+    },
     extend: {},
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
 }
-// screens: {
-//   "2xl": { max: "1535px" },
-//   // => @media (max-width: 1535px) { ... }
 
-//   xl: { max: "1279px" },
-//   // => @media (max-width: 1279px) { ... }
-
-//   lg: { max: "1023px" },
-//   // => @media (max-width: 1023px) { ... }
-
-//   md: { max: "767px" },
-//   // => @media (max-width: 767px) { ... }
-
-//   sm: { max: "639px" },
-//   // => @media (max-width: 639px) { ... }
-// },
 // extend: {
 //   colors: {
 //     primary: "#091F59",

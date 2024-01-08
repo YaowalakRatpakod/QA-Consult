@@ -1,5 +1,4 @@
 import React from 'react'
-import '../Register/Register.css';
 import regisofficer from '../../../Asset/register-officer.png';
 
 

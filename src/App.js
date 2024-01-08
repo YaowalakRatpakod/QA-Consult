@@ -8,6 +8,8 @@ import Register from './Components/Student/Register/Register'
 import Forgetpassword from './Components/Student/Forgetpassword/Forgetpassword'
 import Dashboard from './Components/Student/Dashboard/Dashboard'
 import Createreq from './Components/Student/Createreq/Createreq'
+import History from './Components/Student/History/History';
+import Notifications from './Components/Student/Notifications/Notifications';
 
 const App = () => {
     return (
@@ -22,6 +24,9 @@ const App = () => {
             <Route path="/forget" element={<Forgetpassword/>}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/createreq' element={<Createreq />}></Route>
+            <Route path='/history' element={<History />}></Route>
+            <Route path='/notifications' element={<Notifications />}></Route>
+
         </Routes>
     )
 }
