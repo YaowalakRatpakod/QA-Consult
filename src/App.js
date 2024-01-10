@@ -1,5 +1,8 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import LoginOF from './Components/Officer/Login/Login';
 import RegisterOF from './Components/Officer/Register/Register';
 import ForgotPassOF  from './Components/Officer/Login/ForgotPass';
@@ -20,8 +23,9 @@ import Inprogress from './Components/Student/Dashboard/Inprogress'
 
 const App = () => {
     return (
-        <Routes>
-            
+        
+        <><Routes>
+
             <Route path="/loginOF" element={<LoginOF />} />
             <Route path="/registerOF" element={<RegisterOF />} />
             <Route path="/forgotpassOF" element={<ForgotPassOF />} />
@@ -32,7 +36,7 @@ const App = () => {
             {/* path = "แสดงหน้า login ของนิสิต "*/}
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/forget" element={<Forgetpassword/>}></Route>
+            <Route path="/forget" element={<Forgetpassword />}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/createreq' element={<Createreq />}></Route>
             <Route path='/waiting' element={<Waitingprocecd />}></Route>
@@ -40,7 +44,7 @@ const App = () => {
             <Route path='/history' element={<History />}></Route>
             <Route path='/notifications' element={<Notifications />}></Route>
 
-        </Routes>
+        </Routes><ToastContainer /></>
     )
 }
 
