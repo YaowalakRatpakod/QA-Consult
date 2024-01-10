@@ -15,6 +15,8 @@ import Dashboard from './Components/Student/Dashboard/Dashboard'
 import Createreq from './Components/Student/Createreq/Createreq'
 import History from './Components/Student/History/History';
 import Notifications from './Components/Student/Notifications/Notifications';
+import Waitingprocecd from './Components/Student/Dashboard/Waitingprocecd';
+import Inprogress from './Components/Student/Dashboard/Inprogress'
 
 const App = () => {
     return (
@@ -33,6 +35,8 @@ const App = () => {
             <Route path="/forget" element={<Forgetpassword/>}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/createreq' element={<Createreq />}></Route>
+            <Route path='/waiting' element={<Waitingprocecd />}></Route>
+            <Route path='/inprogress' element={<Inprogress />}></Route>
             <Route path='/history' element={<History />}></Route>
             <Route path='/notifications' element={<Notifications />}></Route>
 
