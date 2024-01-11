@@ -1,8 +1,9 @@
 import React from 'react'
+import Headeroffice from '../../Layout/Header/Headeroffice'
 
 const dashboard = () => {
   return (
-    <div>dashboard</div>
+    <div><Headeroffice /></div>
   )
 }
 
