@@ -1,11 +1,13 @@
 import { React, useState } from "react";
-import register from "../../../Picture/register.png";
-import { toast } from "react-toastify";
+import registerstu from "../../../Picture/register.png";
+// import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
     full_name: "",
-    phone: "",
+    tel: "",
     email: "",
     password: "",
     re_password: "",
@@ -21,28 +23,50 @@ const Register = () => {
     console.log(formData);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    if (password !== re_password) {
-      toast.error("รหัสผ่านไม่ตรงกัน");
-    } 
-    // else {
-    //   const userData = {
-    //     full_name,
-    //     phone,
-    //     email,
-    //     password,
-    //     re_password
-    //   }
-    //   dispatch(register(userData))
-    // }
+  //   if (password !== re_password) {
+  //     toast.error("รหัสผ่านไม่ตรงกัน");
+  //   }
+  // };
+
+  const navigate = useNavigate();
+  // const [newUser, setNewUser] = useState({
+  //   full_name: "",
+  //   tel: "",
+  //   email: "",
+  //   password: "",
+  // });
+
+  // Create User
+  const createUser = (event) => {
+    event.preventDefault();
+
+    let url = "http://127.0.0.1:8000/api/v1/auth/users/";
+
+    axios
+      .post(url, formData)
+      .then(() => {
+        setFormData({
+          full_name: "",
+          tel: "",
+          email: "",
+          password: "",
+          re_password: "",
+        });
+
+        navigate("/");
+        refreshPage();
+      })
+      .catch((err) => console.log(err));
   };
 
-  // const dispatch = useDispatch()
-  // const navigate = useNavigate()
+  const refreshPage = () => {
+    window.location.reload(false);
+  };
 
-  // const { user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+  console.log(formData);
 
   return (
     <div className="bg-[#091F59] h-screen flex justify-between ">
@@ -111,8 +135,8 @@ const Register = () => {
             <div className="font-regular text-sm text-[#091F59]">
               เบอร์โทร
               <input
-                type="phone"
-                name="phone"
+                type="tel"
+                name="tel"
                 onChange={handleChange}
                 value={phone}
                 required
@@ -174,7 +198,10 @@ const Register = () => {
             <div className="flex justify-center flex-col space-y-4 mx-2">
               <button
                 type="submit"
-                onClick={handleSubmit}
+                onClick={createUser}
+                onKeyPress={(event) => {
+                  event.key === "Enter" && createUser();
+                }}
                 class="text-white bg-[#091F59] hover:bg-[#091F59] focus:outline-none focus:ring-4 focus:ring-blue-300 font-bold rounded-full text-xs px-5 py-2.5 text-center  dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 ลงทะเบียน
@@ -184,7 +211,7 @@ const Register = () => {
         </form>
       </div>
       <div className="product flex items-center justify-center w-full h-full bg-[#091F59] ">
-        <img className="w-72 h-72" src={register} alt="product" />
+        <img className="w-72 h-72" src={registerstu} alt="product" />
       </div>
     </div>
   );
