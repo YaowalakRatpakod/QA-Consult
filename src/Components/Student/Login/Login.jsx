@@ -98,27 +98,6 @@ function Login({ users, setCurrentUser }) {
             <p onClick={() => navigate("/register")} id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">ไม่มีบัญชีใช่หรือไม่? <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">ลงทะเบียน</a></p>
           </div>
         </form>
-
-        {/* <div className='relative mt-[-51px] mb-[48px]'>
-          <div className='font-regular text-sm text-[#091F59]'>อีเมล
-            <input type="Email" className='block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:' />
-          </div>
-        </div>
-        <div className='mt-[-63px] mb-[48px]'>
-          <div className='font-regular text-sm text-[#091F59]'>รหัสผ่าน
-            <input type="Password" className='block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:' />
-          </div>
-        </div>
-        <div className='forgetpassword'>
-          <p id="helper-text-explanation" class="mt-[-5.5rem] pl-[205px] text-sm text-gray-500 dark:text-gray-400"><a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">ลืมรหัสผ่าน</a>?</p>
-        </div>
-        <div className='mt-[-63px] mb-[48px]'>
-          <button type="button" class="text-white bg-[#091F59] hover:bg-[#091F59] focus:outline-none focus:ring-4 focus:ring-blue-300 font-bold rounded-full text-xs px-5 py-2.5 text-center me-2 mb-2 dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">เข้าสู่ระบบ</button>
-        </div>
-        <div className='textRegister'>
-          <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">ไม่มีบัญชีใช่หรือไม่? <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">ลงทะเบียน</a></p>
-        </div> */}
-
       </div>
     </div >
   )
