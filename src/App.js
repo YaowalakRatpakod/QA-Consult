@@ -20,6 +20,8 @@ import History from './Components/Student/History/History';
 import Notifications from './Components/Student/Notifications/Notifications';
 import Waitingprocecd from './Components/Student/Dashboard/Waitingprocecd';
 import Inprogress from './Components/Student/Dashboard/Inprogress'
+import Appointment from './Components/Student/Dashboard/Appointment';
+import Completed from './Components/Student/History/Completed';
 
 const App = () => {
     return (
@@ -41,7 +43,9 @@ const App = () => {
             <Route path='/createreq' element={<Createreq />}></Route>
             <Route path='/waiting' element={<Waitingprocecd />}></Route>
             <Route path='/inprogress' element={<Inprogress />}></Route>
+            <Route path='/appointment' element={<Appointment />}></Route>
             <Route path='/history' element={<History />}></Route>
+            <Route path='/completed' element={<Completed />}></Route>
             <Route path='/notifications' element={<Notifications />}></Route>
 
         </Routes><ToastContainer /></>

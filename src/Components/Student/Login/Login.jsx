@@ -163,6 +163,7 @@ function Login() {
             </p>
           </div>
         </form>
+<<<<<<< HEAD
 
         {/* <div className='relative mt-[-51px] mb-[48px]'>
           <div className='font-regular text-sm text-[#091F59]'>อีเมล
@@ -183,6 +184,8 @@ function Login() {
         <div className='textRegister'>
           <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">ไม่มีบัญชีใช่หรือไม่? <a href="#" class="font-medium text-blue-600 hover:underline dark:text-blue-500">ลงทะเบียน</a></p>
         </div> */}
+=======
+>>>>>>> 2600634433b5ae5c4efdea997ad8e68ac8fa8d4d
       </div>
     </div>
   );

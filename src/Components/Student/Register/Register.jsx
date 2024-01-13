@@ -70,7 +70,7 @@ const Register = () => {
 
   return (
     <div className="bg-[#091F59] h-screen flex justify-between ">
-      <div className="bg-[#f8fafc] h-full w-[104rem] grid justify-items-center rounded-r-lg">
+      <div className="bg-[#f8fafc] w-[104rem] grid justify-items-center rounded-r-lg">
         <div className="font-bold text-4xl text-[#091F59] pt-14">
           Q&A Consult
         </div>

@@ -35,8 +35,8 @@ function Createreq() {
                         <div className='bg-[#F2F0DE] rounded-md mx-2 my-4 py-4 px-7'>
                             <div className='flex'>
                                 <div className=''>
-                                    <div className='text-black px-7 py-1 font-medium text-sm' name='name' value={name} onChange={(e) => setName(e.target.value)}>ชื่อ-นามสกุล : <span className='bg-white rounded-sm'>เยาวลักษณ์ ราชปรากฎ</span></div>
-                                    <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm' name='name' value={name} onChange={(e) => setName(e.target.value)}>ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>เยาวลักษณ์ ราชปรากฎ</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
                                     <div className='px-7 py-1 font-medium text-sm' value={topicid} onChange={(e) => setTopicId(e.target.value)}>รหัสหัวข้อ:
                                         <select id="countries" class="bg-white rounded-sm w-25 py-2.3 px-2 py-1 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:">
                                             <option selected >เลือกรหัสหัวข้อ...</option>
@@ -74,8 +74,8 @@ function Createreq() {
 
                                 </div>
                                 <div className=''>
-                                    <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm'>0612548848</span></div>
-                                    <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm'>วิศวกรรมซอฟต์แวร์</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
                                     <div className='px-7 py-1 font-medium text-sm' value={topic} onChange={(e) => setTopic(e.target.value)}>หัวข้อ:
                                         <select id="countries" class="bg-white rounded-sm py-1 w-50 py-2.3 px-2 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:">
                                             <option selected>เลือกหัวข้อ...</option>
