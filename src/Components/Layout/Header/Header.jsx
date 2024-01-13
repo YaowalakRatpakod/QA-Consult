@@ -1,11 +1,14 @@
 import { Dropdown } from 'flowbite-react'
 import React, { useState } from 'react'
 import proflie1 from '../../../Picture/proflie1.png'
+import { Link ,useNavigate } from "react-router-dom";
+
 
 
 
 const Header = () => {
   const [dropdown, setDropdown] = useState(false)
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-[#091F59] border-gray-200 dark:bg-[#091F59]">
@@ -18,13 +21,13 @@ const Header = () => {
         <div className="hidden w-full xl:block xl:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 xl:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 xl:flex-row xl:space-x-8 rtl:space-x-reverse xl:mt-0 xl:border-0 xl:bg-[#091F59] dark:bg-[#091F59] xl:dark:bg-[#091F59] dark:border-gray-700">
             <li>
-              <a href="#" className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:text-blue-700 xl:p-0 dark:text-white xl:dark:text-blue-500" aria-current="page">รายการขอคำปรึกษา</a>
+              <Link to="/dashboard" className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:text-blue-700 xl:p-0 dark:text-white xl:dark:text-blue-500" aria-current="page">รายการขอคำปรึกษา</Link>
             </li>
             <li>
-              <a href="#" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">ประวัติคำถาม</a>
+              <Link to="/history" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">ประวัติคำถาม</Link>
             </li>
             <li>
-              <a href="#" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">แจ้งเตือน</a>
+              <Link to="/notifications" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">แจ้งเตือน</Link>
             </li>
           </ul>
         </div>
@@ -43,10 +46,7 @@ const Header = () => {
             <div class="py-1" role="none">
               <a href="#" className="block px-16 py-2" role="menuitem" tabindex="-1"  ><img className="w-20 h-20 "src={proflie1} alt="" /></a>
               <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">เยาวลักษณ์ ราชปรากฎ</a>
-              <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Sign out</a>
-              {/* <form method="POST" action="#" role="none">
-                <button type="submit" class="text-gray-700 block w-full px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
-              </form> */}
+              <button onClick={() => navigate("/")} class="text-gray-700 flex flex-col  w-full px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
             </div>
           </div>
           ) : (
