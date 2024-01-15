@@ -1,7 +1,7 @@
 import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import loginimg from "../../../Picture/login.png";
-
+import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -22,51 +22,21 @@ function Login() {
     setIsLoading(true);
 
     try {
-      if (!email) {
-        throw new Error("*กรุณากรอกอีเมล");
-      }
-      if (!password) {
-        throw new Error("*กรุณากรอกรหัสผ่าน");
-      }
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/auth/jwt/create/",
+        {
+          email,
+          password,
+        }
+      );
+
       
-      // response
-      const response = await fetch('http://localhost:8000/api/v1/auth/jwt/create/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          email: email,
-          password: password,
-         }),
-      });
 
-      const data = await response.json();
+      //เก็บ token ใน localStorage
+      localStorage.setItem("access_token", response.data.access);
+      console.log("access_token:", localStorage.getItem("access_token"));
 
-      if (!response.ok){
-        throw new Error(data.detail || 'เข้าสู่ระบบไม่สำเร็จ');
-      }
-
-      // เก็บ token ที่ได้จากการ login ไว้ใน localStorage
-      localStorage.setItem('token', data.access);
-
-      // // ดึงข้อมูลผู้ใช้งานจาก Django API
-      // const userResponse = await fetch('http://localhost:8000/api/v1/auth/user/', {
-      //   method: 'GET',
-      //   headers: {
-      //     'Authorization': `Bearer ${data.access}`,
-      //   },
-      // });
-
-      // const userData = await userResponse.json();
-
-      // if (!userResponse.ok) {
-      //   throw new Error(userData.detail || 'Failed to fetch user data');
-      // }
-
-      // console.log('User data:', userData);
-
-
+      // เมื่อเข้าสู่ระบบสำเร็จ
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed", error);

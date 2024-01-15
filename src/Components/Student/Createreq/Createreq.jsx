@@ -1,16 +1,74 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Header from '../../Layout/Header/Header'
+import axios from 'axios'
 import { Button } from 'flowbite-react'
+import { useNavigate } from 'react-router-dom'
 import { Link, } from "react-router-dom";
-import Resizer from 'react-image-file-resizer';
 
 function Createreq() {
+    const navigate = useNavigate()
     const [name, setName] = useState("")
     const [topicid, setTopicId] = useState("")
     const [topic, setTopic] = useState("")
     const [detail, setDetail] = useState("")
     const [date, setDate] = useState("")
     const [image, setImage] = useState(null)
+    const [userInfo, setUserInfo] = useState('');
+    const [consultationRequests, setConsultationRequests] = useState([]);
+
+    useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+         // ดึง token จาก localStorage
+         const accessToken = localStorage.getItem('access_token');
+
+         // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+         const response = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me/', {
+          headers :{
+            Authorization:`Bearer ${accessToken}`,
+          },
+         })
+
+        setUserInfo(response.data);
+      } catch(error) {
+        console.error('Failed to fetch user info', error)
+      }
+    }
+    fetchUserInfo();
+  }, []);
+  
+  const handleCreateRequest = async () => {
+    try {
+        // ดึง token
+        const accessToken = localStorage.getItem('access_token');
+        // กำหนดข้อมูลที่จะส่งไปยัง django
+        const requestData = {
+            full_name: userInfo.full_name,
+            tel: userInfo.tel,
+            faculty: "เทคโนโลยีสารสนเทศและการสื่อสาร", // ตั้งค่าให้ตรงกับข้อมูลจริง
+            major: "วิศวกรรมซอฟต์แวร์", // ตั้งค่าให้ตรงกับข้อมูลจริง
+            topic_code: topicid,
+            topic_title: topic,
+            submission_date: date,
+            details: detail,
+            // document: image, // ในกรณีที่ต้องการอัพโหลดไฟล์
+            status: 'Pending', // ตั้งค่าตามที่ต้องการ
+        }
+        // ส่งข้อมูลไปยัง api 
+        const response = await axios.post('http://127.0.0.1:8000/api/v1/consultation-request/create/', requestData, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+        });
+
+        console.log('สร้างรายการสำเร็จ', response.data);
+        // เมื่อเข้าสู่ระบบสำเร็จ
+        navigate("/dashboard");
+    } catch (error) {
+        console.error('สร้างรายการไม่สำเร็จ' , error)
+    }
+  }
 
     return (
         <div>
@@ -47,7 +105,7 @@ function Createreq() {
                         <div className='bg-[#F2F0DE] rounded-md mx-2 my-4 py-4 px-7'>
                             <div className='flex'>
                                 <div className=''>
-                                    <div className='text-black px-7 py-1 font-medium text-sm' name='name' value={name} onChange={(e) => setName(e.target.value)}>ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>เยาวลักษณ์ ราชปรากฎ</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm' name='name' value={name} onChange={(e) => setName(e.target.value)}>ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>{userInfo.full_name}</span></div>
                                     <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
                                     <div className='px-7 py-1 font-medium text-sm' value={topicid} onChange={(e) => setTopicId(e.target.value)}>รหัสหัวข้อ:
                                         <select id="countries" class="bg-white rounded-sm w-25 py-2.3 px-2 py-1 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:">
@@ -86,7 +144,7 @@ function Createreq() {
 
                                 </div>
                                 <div className=''>
-                                    <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
+                                    <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>{userInfo.tel}</span></div>
                                     <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
                                     <div className='px-7 py-1 font-medium text-sm' value={topic} onChange={(e) => setTopic(e.target.value)}>หัวข้อ:
                                         <select id="countries" class="bg-white rounded-sm py-1 w-50 py-2.3 px-2 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:">
@@ -134,7 +192,8 @@ function Createreq() {
                             </div>
 
                             <div className='grid justify-items-end'>
-                                <Button type="button" className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">สร้างรายการ</Button>
+                                <Button type="button" onClick={handleCreateRequest}
+                                 className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">สร้างรายการ</Button>
                             </div>
                         </div>
                     </div>

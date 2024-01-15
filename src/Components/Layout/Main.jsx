@@ -6,7 +6,7 @@ import Header from './Header/Header'
 const Main = ({ children }) => {
     return (
         <div>
-            <Header />
+            <Header  accessToken={accessToken}/>
             <div>{children}</div>
         </div>
     )
