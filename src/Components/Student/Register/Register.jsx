@@ -3,7 +3,6 @@ import registerstu from "../../../Picture/register.png";
 // import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Resizer from 'react-image-file-resizer';
 
 const Register = (event) => {
   const [formData, setFormData] = useState({
@@ -27,10 +26,7 @@ const Register = (event) => {
   // const handleSubmit = (e) => {
   //   e.preventDefault();
 
-  //   if (password !== re_password) {
-  //     toast.error("รหัสผ่านไม่ตรงกัน");
-  //   }
-  // };
+
 
   const navigate = useNavigate();
   // const [newUser, setNewUser] = useState({
@@ -46,6 +42,17 @@ const Register = (event) => {
   const createUser = (event) => {
     event.preventDefault();
 
+    // // ตรวจสอบว่าข้อมูลทุกช่องถูกกรอกหรือไม่
+    // if (!full_name || !phone || !email || !password || !re_password) {
+    //   // แจ้งเตือนผู้ใช้ให้กรอกข้อมูลทุกช่อง
+    //   return alert("กรุณากรอกข้อมูลทุกช่อง");
+    // }
+
+    // // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
+    // if (password !== re_password) {
+    //   // แจ้งเตือนผู้ใช้ให้กรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน
+    //   return alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+    // }
     let url = "http://127.0.0.1:8000/api/v1/auth/users/";
 
     axios

@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState  } from "react";
 import { useNavigate } from "react-router-dom";
 import loginimg from "../../../Picture/login.png";
 import axios from "axios";
@@ -9,6 +9,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errors, setErrors] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +21,20 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+     // ตรวจสอบว่ามีการกรอกอีเมลและรหัสผ่านหรือไม่
+  if (!email) {
+    setError("กรุณากรอกอีเมล");
+    setIsLoading(false);
+    return;
+  }
+
+  if (!password) {
+    setErrors("กรุณากรอกรหัสผ่าน");
+    setIsLoading(false);
+    return;
+  }
+
 
     try {
       const response = await axios.post(
@@ -89,7 +104,7 @@ function Login() {
                   value={password}
                   className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
                 />
-                <p className="text-red-500 text-sm ">{error}</p>
+                <p className="text-red-500 text-sm ">{errors}</p>
                 <div className="w-full text-right ">
                   <p
                     onClick={() => navigate("/forget")}

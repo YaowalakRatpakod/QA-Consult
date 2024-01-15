@@ -1,9 +1,9 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '../../Layout/Header/Header'
 import axios from 'axios'
 import { Button } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
-import { Link, } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Createreq() {
     const navigate = useNavigate()
@@ -12,63 +12,63 @@ function Createreq() {
     const [topic, setTopic] = useState("")
     const [detail, setDetail] = useState("")
     const [date, setDate] = useState("")
-    const [image, setImage] = useState(null)
+    // const [image, setImage] = useState(null)
     const [userInfo, setUserInfo] = useState('');
-    const [consultationRequests, setConsultationRequests] = useState([]);
+    // const [consultationRequests, setConsultationRequests] = useState([]);
 
     useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-         // ดึง token จาก localStorage
-         const accessToken = localStorage.getItem('access_token');
+        const fetchUserInfo = async () => {
+            try {
+                // ดึง token จาก localStorage
+                const accessToken = localStorage.getItem('access_token');
 
-         // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
-         const response = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me/', {
-          headers :{
-            Authorization:`Bearer ${accessToken}`,
-          },
-         })
+                // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+                const response = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me/', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                })
 
-        setUserInfo(response.data);
-      } catch(error) {
-        console.error('Failed to fetch user info', error)
-      }
-    }
-    fetchUserInfo();
-  }, []);
-  
-  const handleCreateRequest = async () => {
-    try {
-        // ดึง token
-        const accessToken = localStorage.getItem('access_token');
-        // กำหนดข้อมูลที่จะส่งไปยัง django
-        const requestData = {
-            full_name: userInfo.full_name,
-            tel: userInfo.tel,
-            faculty: "เทคโนโลยีสารสนเทศและการสื่อสาร", // ตั้งค่าให้ตรงกับข้อมูลจริง
-            major: "วิศวกรรมซอฟต์แวร์", // ตั้งค่าให้ตรงกับข้อมูลจริง
-            topic_code: topicid,
-            topic_title: topic,
-            submission_date: date,
-            details: detail,
-            // document: image, // ในกรณีที่ต้องการอัพโหลดไฟล์
-            status: 'Pending', // ตั้งค่าตามที่ต้องการ
+                setUserInfo(response.data);
+            } catch (error) {
+                console.error('Failed to fetch user info', error)
+            }
         }
-        // ส่งข้อมูลไปยัง api 
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/consultation-request/create/', requestData, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json'
-            },
-        });
+        fetchUserInfo();
+    }, []);
 
-        console.log('สร้างรายการสำเร็จ', response.data);
-        // เมื่อเข้าสู่ระบบสำเร็จ
-        navigate("/dashboard");
-    } catch (error) {
-        console.error('สร้างรายการไม่สำเร็จ' , error)
+    const handleCreateRequest = async () => {
+        try {
+            // ดึง token
+            const accessToken = localStorage.getItem('access_token');
+            // กำหนดข้อมูลที่จะส่งไปยัง django
+            const requestData = {
+                full_name: userInfo.full_name,
+                tel: userInfo.tel,
+                faculty: "เทคโนโลยีสารสนเทศและการสื่อสาร", // ตั้งค่าให้ตรงกับข้อมูลจริง
+                major: "วิศวกรรมซอฟต์แวร์", // ตั้งค่าให้ตรงกับข้อมูลจริง
+                topic_code: topicid,
+                topic_title: topic,
+                submission_date: date,
+                details: detail,
+                // document: image, // ในกรณีที่ต้องการอัพโหลดไฟล์
+                status: 'Pending', // ตั้งค่าตามที่ต้องการ
+            }
+            // ส่งข้อมูลไปยัง api 
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/consultation-request/create/', requestData, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            console.log('สร้างรายการสำเร็จ', response.data);
+            // เมื่อเข้าสู่ระบบสำเร็จ
+            navigate("/dashboard");
+        } catch (error) {
+            console.error('สร้างรายการไม่สำเร็จ', error)
+        }
     }
-  }
 
     return (
         <div>
@@ -193,7 +193,7 @@ function Createreq() {
 
                             <div className='grid justify-items-end'>
                                 <Button type="button" onClick={handleCreateRequest}
-                                 className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">สร้างรายการ</Button>
+                                    className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">สร้างรายการ</Button>
                             </div>
                         </div>
                     </div>
