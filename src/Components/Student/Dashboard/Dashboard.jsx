@@ -1,10 +1,51 @@
 import React from 'react'
 import Header from '../../Layout/Header/Header'
 import { useNavigate } from 'react-router-dom'
+// import axios from 'axios'
 
 
-function Dashboard() {
+const Dashboard = () => {
   const navigate = useNavigate()
+  // const [formConsult, setFormConsult] = useState({
+  //   full_name:'', //ใส่ข้อมูลผู้ใช้ที่สมัครเข้าระบบ
+  //   faculty:'',
+  //   major:'' ,
+  //   topic_code:'',
+  //   topic_title:'',
+  //   details:'',
+  //   // เพิ่ม propertie ตามความเหมาะสม
+  // });
+
+  // const handleInputChange = (e) => {
+  //   setFormConsult({...formConsult, [e.target.name]: e.target.value})
+  // }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try{
+  //     const response = await fetch('http://127.0.0.1:8000/api/v1/consultation-request/create/', {
+  //       method: "POST",
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // ต้องแทนที่ด้วย access token ที่ได้จากการ login
+  //       },
+  //       body: JSON.stringify(formConsult),
+  //     });
+  //     if (!response.ok) {
+  //        // การสร้างรายการคำขอปรึกษาเสร็จสิ้น
+  //        console.log('Consultation request created successfully.');
+  //     } else {
+  //       // การสร้างรายการคำขอปรึกษาไม่สำเร็จ
+  //       console.error('Failed to create consultation request.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
+
+
+
   return (
     <div>
       <Header />
