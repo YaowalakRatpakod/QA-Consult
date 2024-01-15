@@ -1,8 +1,7 @@
 import React from 'react'
 import Header from '../../Layout/Header/Header'
 import { Button } from 'flowbite-react'
-import x from '../../../Picture/x.png'
-import v from '../../../Picture/v.png'
+import { Link, } from "react-router-dom";
 
 function Appointment() {
   return (
@@ -10,7 +9,11 @@ function Appointment() {
       <Header />
       <div className='ltr'>
         <div className='flex flex-row  ms-28 p-4 text-medium text-black'>การนัดหมาย </div>
-        <img src={x} alt="" className=' absolute top-24 right-32  h-5 w-5  ' />
+        <Link to="/dashboard">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-24 right-32 w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </Link>
 
       </div>
 
@@ -23,8 +26,10 @@ function Appointment() {
               <div className="text-[#F2F0DE] w-1/2 bg-white rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5"> </div>
             </div>
 
-            <img src={v} alt="" className='h-2 w-3 absolute left-36 top-48 ' />
-            <div className=' mt-6 mb-1 ml-10 text-black font-semibold text-sm'> รายละเอียด</div>
+            <div className='flex mt-6 mb-1 ml-10 text-black font-semibold text-sm'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" h-3 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg> รายละเอียด</div>
 
             <div className='bg-yellow-100 rounded-md mx-2 my-4 py-4 px-7'>
               <div className='flex'>

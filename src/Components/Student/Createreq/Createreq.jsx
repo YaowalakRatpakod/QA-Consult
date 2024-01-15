@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Header from '../../Layout/Header/Header'
 import { Button } from 'flowbite-react'
-import x from '../../../Picture/x.png'
-import v from '../../../Picture/v.png'
+import { Link, } from "react-router-dom";
+import Resizer from 'react-image-file-resizer';
 
 function Createreq() {
     const [name, setName] = useState("")
@@ -17,7 +17,14 @@ function Createreq() {
             <Header />
             <div className='ltr'>
                 <div className='flex flex-row  ms-28 p-4 text-medium text-black'>รายการขอคำปรึกษา </div>
-                <img src={x} alt="" className=' absolute top-24 right-32  h-5 w-5  ' />
+
+                <Link to="/dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-24 right-32 w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </Link>
+
+                {/* <img src={x} alt="" className=' absolute top-24 right-32  h-5 w-5 ' /> */}
 
             </div>
 
@@ -28,8 +35,13 @@ function Createreq() {
                         <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">รายละเอียดการขอคำปรึกษา </div>
 
 
-                        <img src={v} alt="" className='h-2 w-3 absolute left-36 top-48 ' />
-                        <div className=' mt-6 mb-1 ml-10 text-black font-semibold text-sm'> รายละเอียด</div>
+                        {/* <img src={v} alt="" className='h-2 w-3 absolute left-36 top-48 ' /> */}
+
+
+                        <div className='flex mt-6 mb-1 ml-10 text-black font-semibold text-sm'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" h-3 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg> รายละเอียด</div>
 
 
                         <div className='bg-[#F2F0DE] rounded-md mx-2 my-4 py-4 px-7'>
@@ -115,7 +127,7 @@ function Createreq() {
                             <input type="text" className='bg-white w-11/12 h-40 mx-7 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'
                                 placeholder='กรอกรายละเอียดเพิ่มเติม...' name='detail' value={detail} onChange={(e) => setDetail(e.target.value)} />
 
-                            <div class='px-7 py-2 font-medium text-sm'>แนบเอกสารเพิ่มเติม : 
+                            <div class='px-7 py-2 font-medium text-sm'>แนบเอกสารเพิ่มเติม :
                                 <input className="pl-2 w-72 pr-4 py-2.3 px-0 font-medium text-sm text-gray-900 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="multiple_files" type="file" multiple>
                                 </input>
                                 <p className='text-gray-600 text-xs py-2'>*การเพิ่มไฟล์เอกสารสามารถเพิ่มได้แค่ไฟล์ประเภท pdf. และขนาดไฟล์จะต้องไม่เกิน 25 MB</p>
@@ -130,7 +142,7 @@ function Createreq() {
                 </div>
             </div>
 
-        </div>
+        </div >
 
     )
 }

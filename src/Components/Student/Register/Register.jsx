@@ -3,8 +3,9 @@ import registerstu from "../../../Picture/register.png";
 // import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Resizer from 'react-image-file-resizer';
 
-const Register = () => {
+const Register = (event) => {
   const [formData, setFormData] = useState({
     full_name: "",
     tel: "",
@@ -15,10 +16,10 @@ const Register = () => {
 
   const { full_name, phone, email, password, re_password } = formData;
 
-  const handleChange = (e) => {
+  const handleChange = async (event) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     }));
     console.log(formData);
   };
@@ -39,6 +40,8 @@ const Register = () => {
   //   password: "",
   // });
 
+
+
   // Create User
   const createUser = (event) => {
     event.preventDefault();
@@ -54,6 +57,7 @@ const Register = () => {
           email: "",
           password: "",
           re_password: "",
+          file: "",
         });
 
         navigate("/");
@@ -61,6 +65,8 @@ const Register = () => {
       })
       .catch((err) => console.log(err));
   };
+
+
 
   const refreshPage = () => {
     window.location.reload(false);

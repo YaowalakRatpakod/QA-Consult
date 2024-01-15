@@ -1,7 +1,7 @@
 import { Dropdown } from 'flowbite-react'
 import React, { useState } from 'react'
 import proflie1 from '../../../Picture/proflie1.png'
-import { Link ,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -42,15 +42,17 @@ const Header = () => {
           </div>
 
           {dropdown ? (
-          <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-            <div class="py-1" role="none">
-              <a href="#" className="block px-16 py-2" role="menuitem" tabindex="-1"  ><img className="w-20 h-20 "src={proflie1} alt="" /></a>
-              <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">เยาวลักษณ์ ราชปรากฎ</a>
-              <button onClick={() => navigate("/")} class="text-gray-700 flex flex-col  w-full px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+            <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div class="py-1 " role="none">
+                <a href="#" className="block px-16 py-2" role="menuitem" tabindex="-1" ><img className="w-20 h-20 " src={proflie1} alt="" /></a>
+                <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">เยาวลักษณ์ ราชปรากฎ</a>
+
+                <Link to="/" class="text-gray-700 rounded-full shadow-lg  bg-red-200 flex flex-col   px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-1">ออกจากระบบบ</Link>
+
+              </div>
             </div>
-          </div>
           ) : (
-          <></>
+            <></>
           )}
 
         </div>
