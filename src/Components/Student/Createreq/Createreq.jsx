@@ -63,10 +63,18 @@ function Createreq() {
             });
 
             console.log('สร้างรายการสำเร็จ', response.data);
+            // ใช้ window.alert เพื่อแสดงข้อความแจ้งเตือน
+            window.alert('สร้างรายการสำเร็จ');
+
             // เมื่อเข้าสู่ระบบสำเร็จ
+
             navigate("/dashboard");
         } catch (error) {
             console.error('สร้างรายการไม่สำเร็จ', error)
+
+            // ใช้ window.alert เพื่อแสดงข้อความแจ้งเตือน
+            window.alert('สร้างรายการไม่สำเร็จ');
+
         }
     }
 

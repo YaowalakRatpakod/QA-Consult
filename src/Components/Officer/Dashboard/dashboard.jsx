@@ -1,5 +1,6 @@
 import React from 'react'
 import Headeroffice from '../../Layout/Header/Headeroffice'
+import { Link, useNavigate } from "react-router-dom";
 
 
 const dashboard = () => {
@@ -56,10 +57,10 @@ const dashboard = () => {
                       8 ธ.ค. 2566 10:00:00
                     </td>
                     <td class="px-6 py-4">
-                      
+
                     </td>
                     <td class="px-6 py-4">
-                      รอดำเนินการ
+                      <Link to="/waitingOF" >รอดำเนินการ</Link>
                     </td>
                   </tr>
                   <tr class="bg-[#F2F1DF] border-b dark:bg-[#F2F1DF] dark:border-gray-700">
@@ -82,7 +83,7 @@ const dashboard = () => {
                       8 ธ.ค. 2566 10:40:00
                     </td>
                     <td class="px-6 py-4">
-                      กำลังดำเนินการ
+                      <Link to="/inprogressOF" >กำลังดำเนินการ</Link>
                     </td>
                   </tr>
                   <tr class="bg-[#F2F1DF] border-b dark:bg-[#F2F1DF] dark:border-gray-700">
@@ -105,10 +106,10 @@ const dashboard = () => {
                       8 ธ.ค. 2566 10:40:00
                     </td>
                     <td class="px-6 py-4">
-                      การนัดหมาย
+                      <Link to="/appointmentOF" >การนัดหมาย</Link>
                     </td>
                   </tr>
-                  
+
                 </tbody>
               </table>
             </div>

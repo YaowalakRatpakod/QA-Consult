@@ -13,6 +13,14 @@ const Register = (event) => {
     re_password: "",
   });
 
+  const [errors, setErrors] = useState({
+    full_name: false,
+    tel: false,
+    email: false,
+    password: false,
+    re_password: false,
+  })
+
   const { full_name, phone, email, password, re_password } = formData;
 
   const handleChange = async (event) => {
@@ -21,6 +29,11 @@ const Register = (event) => {
       [event.target.name]: event.target.value,
     }));
     console.log(formData);
+
+    setErrors((prev) => ({
+      ...prev,
+      [event.target.name]: false,
+    }))
   };
 
   // const handleSubmit = (e) => {
@@ -42,6 +55,31 @@ const Register = (event) => {
   const createUser = (event) => {
     event.preventDefault();
 
+    let hasError = false;
+
+    //ตรวจสอบ
+    const newErrors = {};
+    Object.entries(formData).forEach(([key, value]) => {
+      if (!value) {
+        newErrors[key] = true;
+        hasError = true;
+      }
+    })
+    
+    //ตรวจรหัส
+    if (formData.password !== formData.re_password) {
+      newErrors['password'] = true;
+      newErrors['re_password'] = true;
+      hasError = true;
+    }
+
+    //ถ้ามีข้อผิดพลาดให้ตั้ง state ใหม่ 
+    if (hasError) {
+      setErrors(newErrors);
+      //แสดงแจ้งเตือน
+      window.alert('กรุณากรอกข้อมูลให้ครบทุกช่อง')
+      return;
+    }
     // // ตรวจสอบว่าข้อมูลทุกช่องถูกกรอกหรือไม่
     // if (!full_name || !phone || !email || !password || !re_password) {
     //   // แจ้งเตือนผู้ใช้ให้กรอกข้อมูลทุกช่อง
@@ -102,7 +140,10 @@ const Register = (event) => {
                 onChange={handleChange}
                 value={full_name}
                 required
-                className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.full_name && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
+
               />
             </div>
           </div>
@@ -153,7 +194,10 @@ const Register = (event) => {
                 onChange={handleChange}
                 value={phone}
                 required
-                className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.tel && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
+
               />
             </div>
           </div>
@@ -166,7 +210,9 @@ const Register = (event) => {
                 onChange={handleChange}
                 value={email}
                 required
-                className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.email && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
               />
             </div>
           </div>
@@ -179,7 +225,9 @@ const Register = (event) => {
                 onChange={handleChange}
                 value={password}
                 required
-                className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.password && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
               />
             </div>
           </div>
@@ -192,7 +240,9 @@ const Register = (event) => {
                 onChange={handleChange}
                 value={re_password}
                 required
-                className="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.re_password && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
               />
             </div>
           </div>
