@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import proflie2 from '../../../Picture/proflie2.png'
 
 const Headeroffice = () => {
     const [dropdown, setDropdown] = useState(false)
+    const navigate = useNavigate();
 
     return (
         <nav className="bg-[#091F59] border-gray-200 dark:bg-[#091F59]">
@@ -44,8 +46,9 @@ const Headeroffice = () => {
                                 <a href="#" className="block px-16 py-2" role="menuitem" tabindex="-1"  ><img className="w-20 h-20 " src={proflie2} alt="" /></a>
                                 <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">เจ้าหน้าที่บุษบา นำพาใจ</a>
                                 {/* <a href="#" className="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">Sign out</a> */}
-                                <form method="POST" action="#" role="none">
-                                    <button type="submit" class="text-gray-700 block w-full px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+                                <form>
+                                    <button onClick={() => navigate("/loginOF")}
+                                    type="submit" class="text-gray-700 block w-full px-4 py-2 text-center text-sm" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
                                 </form>
                             </div>
                         </div>

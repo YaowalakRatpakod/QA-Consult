@@ -13,9 +13,9 @@ function Createreq() {
     const [topic, setTopic] = useState("")
     const [detail, setDetail] = useState("")
     const [date, setDate] = useState("")
-    const [image, setImage] = useState(null)
+    // const [image, setImage] = useState(null)
     const [userInfo, setUserInfo] = useState('');
-    const [consultationRequests, setConsultationRequests] = useState([]);
+    // const [consultationRequests, setConsultationRequests] = useState([]);
 
     useEffect(() => {
     const fetchUserInfo = async () => {
@@ -27,6 +27,7 @@ function Createreq() {
          const response = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me/', {
           headers :{
             Authorization:`Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
           },
          })
 
@@ -42,9 +43,10 @@ function Createreq() {
     try {
         // ดึง token
         const accessToken = localStorage.getItem('access_token');
+
         // กำหนดข้อมูลที่จะส่งไปยัง django
         const requestData = {
-            full_name: userInfo.full_name,
+            full_name: userInfo.id,
             tel: userInfo.tel,
             faculty: "เทคโนโลยีสารสนเทศและการสื่อสาร", // ตั้งค่าให้ตรงกับข้อมูลจริง
             major: "วิศวกรรมซอฟต์แวร์", // ตั้งค่าให้ตรงกับข้อมูลจริง
@@ -64,10 +66,22 @@ function Createreq() {
         });
 
         console.log('สร้างรายการสำเร็จ', response.data);
-        // เมื่อเข้าสู่ระบบสำเร็จ
+
+         //เก็บ token ใน localStorage
+        localStorage.setItem("access_token", response.data.access);
+        console.log("access_token:", localStorage.getItem("access_token"));
+
+
+        // ใช้ window.alert เพื่อแสดงข้อความแจ้งเตือน
+        window.alert('สร้างรายการสำเร็จ');
+
+        // เมื่อสร้างรายการสำเร็จ
         navigate("/dashboard");
     } catch (error) {
         console.error('สร้างรายการไม่สำเร็จ' , error)
+
+         // ใช้ window.alert เพื่อแสดงข้อความแจ้งเตือน
+         window.alert('สร้างรายการไม่สำเร็จ');
     }
   }
 

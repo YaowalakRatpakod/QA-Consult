@@ -1,48 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import Header from '../../Layout/Header/Header'
 import { useNavigate } from 'react-router-dom'
-// import axios from 'axios'
+import axios from 'axios'
 
 
-const Dashboard = () => {
+function Dashboard() {
   const navigate = useNavigate()
-  // const [formConsult, setFormConsult] = useState({
-  //   full_name:'', //ใส่ข้อมูลผู้ใช้ที่สมัครเข้าระบบ
-  //   faculty:'',
-  //   major:'' ,
-  //   topic_code:'',
-  //   topic_title:'',
-  //   details:'',
-  //   // เพิ่ม propertie ตามความเหมาะสม
-  // });
+  const [data, setData] = useState([]);
 
-  // const handleInputChange = (e) => {
-  //   setFormConsult({...formConsult, [e.target.name]: e.target.value})
-  // }
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try{
-  //     const response = await fetch('http://127.0.0.1:8000/api/v1/consultation-request/create/', {
-  //       method: "POST",
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // ต้องแทนที่ด้วย access token ที่ได้จากการ login
-  //       },
-  //       body: JSON.stringify(formConsult),
-  //     });
-  //     if (!response.ok) {
-  //        // การสร้างรายการคำขอปรึกษาเสร็จสิ้น
-  //        console.log('Consultation request created successfully.');
-  //     } else {
-  //       // การสร้างรายการคำขอปรึกษาไม่สำเร็จ
-  //       console.error('Failed to create consultation request.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // }
+  useEffect(() => {
+    // เรียกข้อมูลคำขอปรึกษาที่สร้างขึ้นใหม่
+    axios.get('http://127.0.0.1:8000/api/user-consultation-requests/', {
+      headers: {
+        Authorization: `Token ${localStorage.getItem('accessToken')}` // ส่ง Token ใน request
+      }
+    })
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching consultation requests:', error);
+      });
+  }, []);
 
 
 
@@ -91,8 +70,10 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
+                  {/* ใช้ map เพื่อแสดงรายการขอคำปรึกษาที่ได้รับมา */}
+                  {data.map((request, index) => (
+                     <tr key={index} class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
                       UP01
                     </th>
                     <td class="px-6 py-4">
@@ -108,129 +89,10 @@ const Dashboard = () => {
                       8 ธ.ค. 2566 10:40:00
                     </td>
                     <td class="px-6 py-4">
-                      การนัดหมาย
+                      {request.status}
                     </td>
                   </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
-                  <tr class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">
-                      UP01
-                    </th>
-                    <td class="px-6 py-4">
-                      คำร้องทั่วไป
-                    </td>
-                    <td class="px-6 py-4">
-                      เยาวลักษณ์
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:00:00
-                    </td>
-                    <td class="px-6 py-4">
-                      8 ธ.ค. 2566 10:40:00
-                    </td>
-                    <td class="px-6 py-4">
-                      การนัดหมาย
-                    </td>
-                  </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
