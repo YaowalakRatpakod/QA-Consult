@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../../Layout/Header/Header'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from "react-router-dom";
 
 function History() {
   const navigate = useNavigate()
@@ -48,7 +48,7 @@ function History() {
                     8 ธ.ค. 2566 10:00:00
                   </td>
                   <td class="px-6 py-4">
-                    เสร็จสิ้น
+                    <Link to="/completed">เสร็จสิ้น</Link>
                   </td>
                 </tr>
                 <tr class="bg-green-100 border-b dark:bg-[#F2F1DF] dark:border-gray-700">

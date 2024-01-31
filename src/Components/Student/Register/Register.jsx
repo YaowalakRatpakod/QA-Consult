@@ -4,7 +4,7 @@ import registerstu from "../../../Picture/register.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+const Register = (event) => {
   
   const [formData, setFormData] = useState({
     full_name: "",
@@ -20,17 +20,22 @@ const Register = () => {
     email: false,
     password: false,
     re_password: false,
-  });
-
+  })
 
   const { full_name, phone, email, password, re_password } = formData;
 
-  const handleChange = (e) => {
+  const handleChange = async (event) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     }));
     console.log(formData);
+
+    setErrors((prev) => ({
+      ...prev,
+      [event.target.name]: false,
+    }))
+  };
 
     setErrors((prev) => ({
       ...prev,
@@ -39,6 +44,12 @@ const Register = () => {
   };
 
   const navigate = useNavigate();
+  // const [newUser, setNewUser] = useState({
+  //   full_name: "",
+  //   tel: "",
+  //   email: "",
+  //   password: "",
+  // });
 
   // Create User
   const createUser = (event) => {
@@ -70,6 +81,42 @@ const Register = () => {
       return;
     }
 
+    let hasError = false;
+
+    //ตรวจสอบ
+    const newErrors = {};
+    Object.entries(formData).forEach(([key, value]) => {
+      if (!value) {
+        newErrors[key] = true;
+        hasError = true;
+      }
+    })
+    
+    //ตรวจรหัส
+    if (formData.password !== formData.re_password) {
+      newErrors['password'] = true;
+      newErrors['re_password'] = true;
+      hasError = true;
+    }
+
+    //ถ้ามีข้อผิดพลาดให้ตั้ง state ใหม่ 
+    if (hasError) {
+      setErrors(newErrors);
+      //แสดงแจ้งเตือน
+      window.alert('กรุณากรอกข้อมูลให้ครบทุกช่อง')
+      return;
+    }
+    // // ตรวจสอบว่าข้อมูลทุกช่องถูกกรอกหรือไม่
+    // if (!full_name || !phone || !email || !password || !re_password) {
+    //   // แจ้งเตือนผู้ใช้ให้กรอกข้อมูลทุกช่อง
+    //   return alert("กรุณากรอกข้อมูลทุกช่อง");
+    // }
+
+    // // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
+    // if (password !== re_password) {
+    //   // แจ้งเตือนผู้ใช้ให้กรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน
+    //   return alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
+    // }
     let url = "http://127.0.0.1:8000/api/v1/auth/users/";
 
     axios
@@ -81,6 +128,7 @@ const Register = () => {
           email: "",
           password: "",
           re_password: "",
+          file: "",
         });
 
         navigate("/");
@@ -88,6 +136,8 @@ const Register = () => {
       })
       .catch((err) => console.log(err));
   };
+
+
 
   const refreshPage = () => {
     window.location.reload(false);
@@ -119,6 +169,7 @@ const Register = () => {
                 className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
                   errors.full_name && 'border-red-500'
                 } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
+
               />
             </div>
           </div>
@@ -172,6 +223,7 @@ const Register = () => {
                 className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
                   errors.tel && 'border-red-500'
                 } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
+
               />
             </div>
           </div>

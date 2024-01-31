@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from '../../Layout/Header/Header'
+import Header from '../../Layout/Header/Headeroffice'
 import { Button } from 'flowbite-react'
 import { Link, } from "react-router-dom";
 
@@ -7,9 +7,10 @@ function Completed() {
     return (
         <div>
             <Header />
+
             <div className='ltr'>
                 <div className='flex flex-row  ms-28 p-4 text-medium text-black'>ประวัติคำถาม</div>
-                <Link to="/history">
+                <Link to="/historyOF">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-24 right-32 w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
@@ -23,7 +24,7 @@ function Completed() {
                     <div className='rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 '>
                         <div className='flex'>
                             <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">รายละเอียดการขอคำปรึกษา </div>
-
+                        
                         </div>
 
                         <div className='flex mt-6 mb-1 ml-10 text-black font-semibold text-sm'>
@@ -40,11 +41,15 @@ function Completed() {
                                     <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>8 ธ.ค. 2566</span> </div>
 
                                 </div>
+
                                 <div className=''>
                                     <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
                                     <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
                                     <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>คำร้องขออนุมัติเทียบรายวิชา</span></div>
 
+                                </div>
+                                <div className=''>
+                                    <div className='text-black px-7 py-1 font-medium text-sm' name='name' >เลขที่คำร้อง : <span className='bg-white rounded-sm p-1'>#002</span></div>
                                 </div>
                             </div>
 
@@ -70,6 +75,8 @@ function Completed() {
                                 <p className='text-gray-500 text-center font-medium'>ดำเนินการเสร็จสิ้น</p>
                             </form>
 
+                          
+
 
 
                         </div>
@@ -77,7 +84,6 @@ function Completed() {
 
                 </div>
             </div>
-
 
 
         </div>

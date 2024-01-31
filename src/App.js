@@ -7,8 +7,13 @@ import LoginOF from './Components/Officer/Login/Login';
 import RegisterOF from './Components/Officer/Register/Register';
 import ForgotPassOF  from './Components/Officer/Login/ForgotPass';
 import DashboardOF from './Components/Officer/Dashboard/dashboard';
+import WaitingprocecdOF from './Components/Officer/Dashboard/Waitingprocecd';
+import InprogressOF from './Components/Officer/Dashboard/Inprogress';
+import AppointmentOF from './Components/Officer/Dashboard/Appointment';
 import Statistic from './Components/Officer/Statistics/statistic';
 import HistoryOF from './Components/Officer/History/History';
+import CompletedOF from './Components/Officer/History/Completed';
+import NomovementOF from './Components/Officer/History/Nomovement';
 import NotificationOF from './Components/Officer/Notifications/notifications';
  
 import Login from './Components/Student/Login/Login'
@@ -23,6 +28,7 @@ import Inprogress from './Components/Student/Dashboard/Inprogress'
 import Appointment from './Components/Student/Dashboard/Appointment';
 import Completed from './Components/Student/History/Completed';
 
+
 const App = () => {
     return (
         
@@ -32,8 +38,13 @@ const App = () => {
             <Route path="/registerOF" element={<RegisterOF />} />
             <Route path="/forgotpassOF" element={<ForgotPassOF />} />
             <Route path="/dashboardOF" element={<DashboardOF />} />
+            <Route path='/waitingOF' element={<WaitingprocecdOF />} />
+            <Route path='/inprogressOF' element={<InprogressOF />} />
+            <Route path='/appointmentOF' element={<AppointmentOF />} />
             <Route path="/statistic" element={<Statistic />} />
             <Route path="/historyOF" element={<HistoryOF />} />
+            <Route path='/completedOF' element={<CompletedOF />} />
+            <Route path='/nomovementOF' element={<NomovementOF />} />
             <Route path="/notificationOF" element={<NotificationOF />} />
             {/* path = "แสดงหน้า login ของนิสิต "*/}
             <Route path="/" element={<Login />} />

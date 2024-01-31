@@ -1,36 +1,38 @@
-import { Dropdown } from "flowbite-react";
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import proflie1 from "../../../Picture/proflie1.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Dropdown } from 'flowbite-react'
+import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import proflie1 from '../../../Picture/proflie1.png'
+import { Link ,useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [dropdown, setDropdown] = useState(false);
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
         // ดึง token จาก localStorage
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem('access_token');
+        // กำหนดข้อมูลที่จะส่งไปยัง django
+        const requestData = {
+            full_name: userInfo.full_name}
 
         // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
-        const response = await axios.get(
-          "http://127.0.0.1:8000/api/v1/auth/users/me/",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/auth/users/me/', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
 
         setUserInfo(response.data);
       } catch (error) {
-        console.error("Failed to fetch user info", error);
+        console.error('Failed to fetch user info', error)
       }
     };
     fetchUserInfo();
   }, []);
+  
+
 
   return (
     <nav className="bg-[#091F59] border-gray-200 dark:bg-[#091F59]">
@@ -76,66 +78,20 @@ const Header = () => {
         </div>
         <div class="relative inline-block text-center">
           <div className="container">
-            
-            <button
-              onClick={() => setDropdown((val) => !val)}
-              type="button"
-              class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              id="menu-button"
-              aria-expanded="true"
-              aria-haspopup="true"
-            >
-              {userInfo.full_name}
-              <svg
-                class="-mr-1 h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
+            <button onClick={() => setDropdown(val => !val)} type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+            {userInfo.full_name}
+              <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" >
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
               </svg>
             </button>
           </div>
 
           {dropdown ? (
-            <div
-              class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="menu-button"
-              tabindex="-1"
-            >
-              <div class="py-1" role="none">
-                <a
-                  href="#"
-                  className="block px-16 py-2"
-                  role="menuitem"
-                  tabindex="-1"
-                >
-                  <img className="w-20 h-20 " src={proflie1} alt="" />
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-700 block px-4 py-2 text-sm"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="menu-item-0"
-                >
-                  {" "}
-                  {userInfo.full_name}
-                </a>
-                <button
-                  onClick={() => navigate("/")}
-                  class="text-gray-700 flex flex-col  w-full px-4 py-2 text-center text-sm"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="menu-item-3"
-                >
-                  Sign out
-                </button>
+            <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div class="py-4 flex flex-col justify-center items-center" role="none">
+                <a href="#" className="py-2"  ><img className="w-20 h-20 " src={proflie1} alt="" /></a>
+                <a href="#" className="text-gray-700  text-sm py-2" >{userInfo.full_name}</a>
+                <button onClick={() => navigate("/")} class="text-gray-700 rounded-full shadow-lg bg-red-200  text-center text-sm px-3 py-2 " >ออกจากระบบ</button>
               </div>
             </div>
           ) : (
@@ -147,4 +103,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header
