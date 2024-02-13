@@ -148,8 +148,8 @@ function Inprogress() {
                                 <div class='px-7 py-1 font-medium text-sm'>รายละเอียด
                                     <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>หนูไม่สามารถยื่นคำร้องขอเทียบรายวิชาได้ค่ะ</p>
                                 </div>
-                                <div class='px-7 py-1 font-medium text-sm'>คอมเมนต์
-                                    {/* <p className='bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'></p> */}
+                                <div class='px-7 py-1 font-medium text-sm' >คอมเมนต์
+                                    
                                     <div class="flex items-start gap-2.5">
                                         <div class="flex flex-col w-full leading-1.5 bg-white  h-32 mr-10 rounded-md px-1 py-1">
                                             <div class="flex items-center space-x-2 rtl:space-x-reverse">
@@ -191,7 +191,8 @@ function Inprogress() {
                 </div>
             </div>
 
-
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+            <script src="/js/chatroom.js"></script>
         </div>
     )
 }
