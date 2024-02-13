@@ -22,7 +22,6 @@ function Waitingprocecd() {
             </div>
 
             <div className='flex flex-col items-center justify-around '>
-                {/* <div className='flex justify-center w-full'></div> */}
                 <div className='mx-auto w-4/5 h-full  '>
                     <div className='rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 '>
                         <div className='flex'>
