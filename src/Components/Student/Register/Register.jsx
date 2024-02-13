@@ -1,11 +1,9 @@
 import { React, useState } from "react";
 import registerstu from "../../../Picture/register.png";
-// import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Register = (event) => {
-  
   const [formData, setFormData] = useState({
     full_name: "",
     tel: "",
@@ -37,49 +35,14 @@ const Register = (event) => {
     }))
   };
 
-    setErrors((prev) => ({
-      ...prev,
-      [e.target.name]: false,
-    }))
-  };
 
   const navigate = useNavigate();
-  // const [newUser, setNewUser] = useState({
-  //   full_name: "",
-  //   tel: "",
-  //   email: "",
-  //   password: "",
-  // });
+
+
 
   // Create User
   const createUser = (event) => {
     event.preventDefault();
-
-    let hasError = false;
-
-    //ตรวจสอบ
-    const newErrors = {};
-    Object.entries(formData).forEach(([key, value]) => {
-      if (!value) {
-        newErrors[key] = true;
-        hasError = true;
-      }
-    })
-
-    // ตรวจรหัส
-    if (formData.password !== formData.re_password) {
-      newErrors['password'] = true;
-      newErrors['re_password'] = true;
-      hasError = true;
-    }
-
-    // ถ้ามีข้อผิดพลาดให้ตั้ง state ใหม่
-    if (hasError) {
-      setErrors(newErrors);
-      //แสดง แจ้งเตือน
-      window.alert('กรุณากรอกข้อมูลให้ครบทุกช่อง')
-      return;
-    }
 
     let hasError = false;
 
@@ -106,17 +69,7 @@ const Register = (event) => {
       window.alert('กรุณากรอกข้อมูลให้ครบทุกช่อง')
       return;
     }
-    // // ตรวจสอบว่าข้อมูลทุกช่องถูกกรอกหรือไม่
-    // if (!full_name || !phone || !email || !password || !re_password) {
-    //   // แจ้งเตือนผู้ใช้ให้กรอกข้อมูลทุกช่อง
-    //   return alert("กรุณากรอกข้อมูลทุกช่อง");
-    // }
 
-    // // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
-    // if (password !== re_password) {
-    //   // แจ้งเตือนผู้ใช้ให้กรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน
-    //   return alert("รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน");
-    // }
     let url = "http://127.0.0.1:8000/api/v1/auth/users/";
 
     axios
@@ -307,28 +260,3 @@ const Register = (event) => {
 };
 
 export default Register;
-
-// const [newUser, setNewUser] = useState({
-//   'full_name': '',
-//   'tel': '',
-//   'email': '',
-//   'password': '',
-// });
-// // Change Element Value
-// const handleChange = (event) => {
-//   setNewUser({
-//     ...newUser,
-//     [event.target.name]: event.target.value
-//   });
-// }
-// console.log();
-// Submit Form
-// const submitForm = () => {
-//   const registerFormData = new FormData();
-//   registerFormData.append("full_name", newUser.full_name)
-//   registerFormData.append('tel', newUser.tel);
-//   registerFormData.append('email', newUser.email);
-//   registerFormData.append('password', newUser.password);
-
-//   axios.
-// }

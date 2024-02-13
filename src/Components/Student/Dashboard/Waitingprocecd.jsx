@@ -1,10 +1,97 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 import Header from '../../Layout/Header/Header'
-import { Button } from 'flowbite-react'
-import { Link, } from "react-router-dom";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+
 
 function Waitingprocecd() {
+  const {id} = useParams();
+  const [requestInfo, setRequestInfo] = useState(null);
+  const getSectionInThai = (topic_section) => {
+    switch (topic_section) {
+      case "ADM01":
+        return "สมัครโครงการรับนิสิตกลับเข้าศึกษาในมหาวิทยาลัยพะเยา (รีรหัส)";
+      case "ADM02":
+        return "คำร้องขอส่งใบรับรองแพทย์";
+      case "ADM03":
+        return "คำร้องส่งข้อมูลผลการสอบ TPAT5 ความถนัดครุศาสตร์-ศึกษาศาสตร์";
+      case "REG04":
+        return "คำร้องขอรับผลการเรียนรายวิชาในหมวดวิชาศึกษาทั่วไป";
+      case "REG05":
+        return "คำร้องขอพัฒนาผลการเรียนรายวิชาในหมวดวิชาศึกษาทั่วไป";
+      case "UP01":
+        return "คำร้องทั่วไป";
+      case "UP02":
+        return "คำร้องขอใบรับรอง";
+      case "UP03":
+        return "คำร้องขอใบรายงานผลการศึกษา (Transcript)";
+      case "UP03-1":
+        return "คำร้องขอใบรายงานผลการศึกษา (Digital Transcript)";
+      case "UP05":
+        return "คำร้องขอเพิ่มรายวิชาหลังกำหนด";
+      case "UP06":
+        return "คำร้องขอลงทะเบียนเรียนมากกว่า/น้อยกว่าเกณฑ์";
+      case "UP07":
+        return "คำร้องขออนุมัติเทียบรายวิชา";
+      case "UP08":
+        return "คำร้องขอถอนรายวิชา โดยได้รับอักษร W";
+      case "UP09":
+        return "คำร้องขอเทียบโอนรายวิชา";
+      case "UP10":
+        return "คำร้องขอย้ายคณะ/หลักสูตร/แผนการเรียน";
+      case "UP11":
+        return "คำร้องขอเปลี่ยนชื่อ ชื่อสกุล ยศ และอื่นๆ";
+      case "UP12":
+        return "คำร้องขอลาพักการศึกษา";
+      case "UP13":
+        return "คำร้องขอลาออกจากการศึกษา";
+      case "UP14":
+        return "คำร้องขอลงทะเบียนเรียนพร้อมฝึกงาน/การศึกษาอิสระ/วิทยานิพนธ์";
+      case "UP17":
+        return "คำร้องขอผ่อนผันการชำระค่าลงทะเบียนเรียน";
+      case "UP18":
+        return "คำร้องขอผ่อนผันการชำระค่าลงทะเบียนเรียน";
+      case "UP20-1":
+        return "คำร้องยื่นความประสงค์ขอลงทะเบียนเรียนรายวิชา";
+      case "UP24":
+        return "คำร้องขอสำเร็จการศึกษา";
+      case "UP29":
+        return "คำร้องขอยื่นสำเร็จการศึกษาล่าช้ากว่ากำหนด";
+      case "UP30":
+        return "คำร้องขอถอนรายวิชาศึกษาทั่วไป (GE-Online)";
+    }
+  };
 
+  useEffect(() => {
+    const fetchRequestInfo = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+
+        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/user-consultation-requests/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        console.log(response.data)
+        setRequestInfo(response.data);
+      } catch (error) {
+        console.error("Failed to fetch request info", error);
+      }
+      
+    };
+    fetchRequestInfo();
+  }, [id]);
+  
+  if (!requestInfo) {
+    return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
+  }
+    
   return (
     <div>
       <Header />
@@ -35,23 +122,25 @@ function Waitingprocecd() {
             <div className='bg-red-300 rounded-md mx-2 my-4 py-4 px-7'>
               <div className='flex'>
                 <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm' name='name' >ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>เยาวลักษณ์ ราชปรากฎ</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm' name='name' >ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>{requestInfo.user.full_name}</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
-                  <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>UP07</span></div>
-                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>8 ธ.ค. 2566</span> </div>
+                  <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>{requestInfo.topic_id}</span></div>
+                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleString(
+                            "th-TH"
+                          )}</span> </div>
 
                 </div>
                 <div className=''>
                   <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
-                  <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>คำร้องขออนุมัติเทียบรายวิชา</span></div>
+                  <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>{getSectionInThai(requestInfo.topic_section)}</span></div>
 
                 </div>
               </div>
 
               <form>
                 <div class='px-7 py-1 font-medium text-sm'>รายละเอียด
-                  <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>หนูไม่สามารถยื่นคำร้องขอเทียบรายวิชาได้ค่ะ</p>
+                  <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>{requestInfo.details}</p>
                 </div>
                 <div class='px-7 py-1 font-medium text-sm'>คอมเมนต์
                   <p className='bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'></p>
@@ -61,7 +150,7 @@ function Waitingprocecd() {
               <form>
                 <label for="chat" class="sr-only">Your message</label>
                 <div class="flex items-center px-3 py-2 mr-40 ml-8 rounded-lg bg-gray-50 dark:bg-gray-700">
-                  <textarea id="chat" rows="1" class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="แสดงความคิดเห็น...."></textarea>
+                  <textarea id="chat" rows="1"  class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="แสดงความคิดเห็น...."></textarea>
                   <button type="submit" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                     <svg class="w-5 h-5 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                       <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />

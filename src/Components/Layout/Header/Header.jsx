@@ -2,12 +2,12 @@ import { Dropdown } from 'flowbite-react'
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import proflie1 from '../../../Picture/proflie1.png'
-import { Link ,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const [dropdown, setDropdown] = useState(false);
+  const [dropdown, setDropdown] = useState(false)
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState("");
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -28,51 +28,30 @@ const Header = () => {
       } catch (error) {
         console.error('Failed to fetch user info', error)
       }
-    };
+    }
     fetchUserInfo();
   }, []);
-  
+
 
 
   return (
     <nav className="bg-[#091F59] border-gray-200 dark:bg-[#091F59]">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-around mx-auto p-4">
-        <a
-          href="{{< param homepage >}}/"
-          className="flex items-center space-x-3 rtl:space-x-reverse"
-        >
+        <a href="{{< param homepage >}}/" className="flex items-center space-x-3 rtl:space-x-reverse">
           {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" /> */}
-          <span className="self-center text-2xl text-white font-semibold whitespace-nowrap dark:text-white">
-            Q&A Consult
-          </span>
+          <span className="self-center text-2xl text-white font-semibold whitespace-nowrap dark:text-white">Q&A Consult</span>
         </a>
 
         <div className="hidden w-full xl:block xl:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 xl:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 xl:flex-row xl:space-x-8 rtl:space-x-reverse xl:mt-0 xl:border-0 xl:bg-[#091F59] dark:bg-[#091F59] xl:dark:bg-[#091F59] dark:border-gray-700">
             <li>
-              <Link
-                to="/dashboard"
-                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:text-blue-700 xl:p-0 dark:text-white xl:dark:text-blue-500"
-                aria-current="page"
-              >
-                รายการขอคำปรึกษา
-              </Link>
+              <Link to="/dashboard" className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:text-blue-700 xl:p-0 dark:text-white xl:dark:text-blue-500" aria-current="page">รายการขอคำปรึกษา</Link>
             </li>
             <li>
-              <Link
-                to="/history"
-                className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent"
-              >
-                ประวัติคำถาม
-              </Link>
+              <Link to="/history" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">ประวัติคำถาม</Link>
             </li>
             <li>
-              <Link
-                to="/notifications"
-                className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent"
-              >
-                แจ้งเตือน
-              </Link>
+              <Link to="/notifications" className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent">แจ้งเตือน</Link>
             </li>
           </ul>
         </div>
@@ -97,10 +76,11 @@ const Header = () => {
           ) : (
             <></>
           )}
+
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
 export default Header

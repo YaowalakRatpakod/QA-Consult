@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LoginOF from './Components/Officer/Login/Login';
 import RegisterOF from './Components/Officer/Register/Register';
 import ForgotPassOF  from './Components/Officer/Login/ForgotPass';
-import DashboardOF from './Components/Officer/Dashboard/dashboard';
+import DashboardOF from './Components/Officer/Dashboard/DashboardOF';
 import WaitingprocecdOF from './Components/Officer/Dashboard/Waitingprocecd';
 import InprogressOF from './Components/Officer/Dashboard/Inprogress';
 import AppointmentOF from './Components/Officer/Dashboard/Appointment';
@@ -38,12 +38,12 @@ const App = () => {
             <Route path="/registerOF" element={<RegisterOF />} />
             <Route path="/forgotpassOF" element={<ForgotPassOF />} />
             <Route path="/dashboardOF" element={<DashboardOF />} />
-            <Route path='/waitingOF' element={<WaitingprocecdOF />} />
-            <Route path='/inprogressOF' element={<InprogressOF />} />
-            <Route path='/appointmentOF' element={<AppointmentOF />} />
+            <Route path='/waitingOF/:id' element={<WaitingprocecdOF />} />
+            <Route path='/inprogressOF/:id' element={<InprogressOF />} />
+            <Route path='/appointmentOF/:id' element={<AppointmentOF />} />
             <Route path="/statistic" element={<Statistic />} />
-            <Route path="/historyOF" element={<HistoryOF />} />
-            <Route path='/completedOF' element={<CompletedOF />} />
+            <Route path="/historyOF/" element={<HistoryOF />} />
+            <Route path='/completedOF/:id' element={<CompletedOF />} />
             <Route path='/nomovementOF' element={<NomovementOF />} />
             <Route path="/notificationOF" element={<NotificationOF />} />
             {/* path = "แสดงหน้า login ของนิสิต "*/}
@@ -52,11 +52,11 @@ const App = () => {
             <Route path="/forget" element={<Forgetpassword />}></Route>
             <Route path='/dashboard' element={<Dashboard />}></Route>
             <Route path='/createreq' element={<Createreq />}></Route>
-            <Route path='/waiting' element={<Waitingprocecd />}></Route>
-            <Route path='/inprogress' element={<Inprogress />}></Route>
-            <Route path='/appointment' element={<Appointment />}></Route>
-            <Route path='/history' element={<History />}></Route>
-            <Route path='/completed' element={<Completed />}></Route>
+            <Route path='/waiting/:id' element={<Waitingprocecd />}></Route>
+            <Route path='/inprogress/:id' element={<Inprogress />}></Route>
+            <Route path='/appointment/:id' element={<Appointment />}></Route>
+            <Route path='/history/' element={<History />}></Route>
+            <Route path='/completed/:id' element={<Completed />}></Route>
             <Route path='/notifications' element={<Notifications />}></Route>
 
         </Routes><ToastContainer /></>
