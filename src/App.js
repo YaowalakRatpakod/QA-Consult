@@ -30,7 +30,6 @@ import Appointment from './Components/Student/Dashboard/Appointment';
 import Completed from './Components/Student/History/Completed';
 
 
-
 const App = () => {
     return (
         
@@ -60,7 +59,7 @@ const App = () => {
             <Route path='/history/' element={<History />}></Route>
             <Route path='/completed/:id' element={<Completed />}></Route>
             <Route path='/notifications' element={<Notifications />}></Route>
-
+           
            
 
         </Routes><ToastContainer /></>
