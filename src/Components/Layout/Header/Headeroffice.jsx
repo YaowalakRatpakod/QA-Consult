@@ -54,7 +54,7 @@ const Headeroffice = () => {
             <li>
               <Link
                 to="/dashboardOF"
-                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:text-blue-700 xl:p-0 dark:text-white xl:dark:text-blue-500"
+                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700"
                 aria-current="page"
               >
                 รายการขอคำปรึกษา
@@ -63,7 +63,7 @@ const Headeroffice = () => {
             <li>
               <Link
                 to="/statistic"
-                className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700"
               >
                 สถิติ
               </Link>
@@ -71,7 +71,7 @@ const Headeroffice = () => {
             <li>
               <Link
                 to="/historyOF"
-                className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700"
               >
                 ประวัติคำถาม
               </Link>
@@ -79,7 +79,7 @@ const Headeroffice = () => {
             <li>
               <Link
                 to="/notificationOF"
-                className="block py-2 px-3 text-gray-400 rounded hover:bg-gray-100 xl:hover:bg-transparent xl:border-0 xl:hover:text-blue-700 xl:p-0 dark:text-white xl:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white xl:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700"
               >
                 แจ้งเตือน
               </Link>
