@@ -309,7 +309,7 @@ function Createreq() {
               </div>
 
               <div class="px-7 py-1 font-medium text-sm">รายละเอียด : </div>
-              <input
+              <textarea
                 type="text"
                 className="bg-white w-11/12 h-40 mx-7 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1"
                 placeholder="กรอกรายละเอียดเพิ่มเติม..."

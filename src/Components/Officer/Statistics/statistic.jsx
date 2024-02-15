@@ -1,10 +1,13 @@
-import React from 'react'
-import Headeroffice from '../../Layout/Header/Headeroffice'
-import Linech from './Linech'
+import React, { useState } from 'react';
+import Headeroffice from '../../Layout/Header/Headeroffice';
+import Linech from './Linech';
 
+function Statistic() {
+  const [filter, setFilter] = useState('week'); // เริ่มต้นด้วยการกรองตามสัปดาห์
 
-function statistic() {
-
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
 
   return (
     <div>
@@ -19,28 +22,21 @@ function statistic() {
                 <div className='font-semibold text-[#091F59] text-2xl'>1000</div>
                 <div className='font-semibold text-[#091F59]'>จำนวน</div>
               </div>
-              <div className=''>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                </svg>
-                <div>
-                  
-                </div>
-
+              <div className='flex items-center'>
+                <select value={filter} onChange={handleFilterChange} className="bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-base">
+                  <option value="week">สัปดาห์</option>
+                  <option value="month">เดือน</option>
+                </select>
               </div>
-
             </div>
             <div className=''>
-              <Linech />
+              <Linech filter={filter} />
             </div>
           </div>
         </div>
       </div>
-
-
-    </div >
-
-  )
+    </div>
+  );
 }
 
-export default statistic
+export default Statistic;
