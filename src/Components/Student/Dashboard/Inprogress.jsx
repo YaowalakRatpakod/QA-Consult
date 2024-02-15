@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import Header from '../../Layout/Header/Header'
 import { Button } from 'flowbite-react'
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate} from "react-router-dom";
 
 function Inprogress() {
   const {id} = useParams(); // ใช้ hook useParams เพื่อดึงค่า id จาก URL
   const [requestInfo, setRequestInfo] = useState(null);
+  const [userComment, setUserComment] = useState(""); // เก็บข้อความ
+  const [messages, setMessages] = useState([]);
+  const navigate = useNavigate(); // ใช้ hook เพื่อเปลี่ยนเส้นทาง
+
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
       case "ADM01":
@@ -87,6 +91,76 @@ function Inprogress() {
     };
     fetchRequestInfo();
   }, [id]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Failed to fetch messages", error);
+      }
+    };
+    fetchMessages();
+  }, [id]);
+
+  const sendUserComment = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/send-messages/",
+        {
+          sender: requestInfo.user.id,
+          receiver: 1,
+          room: requestInfo.id,
+          message: userComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to send user comment", error);
+    }
+  };
+
+  // เปลี่ยนสถานะ
+  const changeStatus = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+  
+      // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
+        { new_status: "Completed" }, // ส่งข้อมูลใหม่เพื่ออัปเดตสถานะ
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Failed to mark request as completed", error);
+  }
+};
+
+
   
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -143,26 +217,33 @@ function Inprogress() {
                   <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>{requestInfo.details}</p>
                 </div>
                 <div class='px-7 py-1 font-medium text-sm'>คอมเมนต์
-                  {/* <p className='bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'></p> */}
-
-                  <div class="flex items-start gap-2.5">
-                    <div class="flex flex-col w-full leading-1.5 bg-white  h-32 mr-10 rounded-md px-1 py-1">
-                      <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                        <span class="text-sm font-semibold text-gray-900 dark:text-white">เจ้าหน้าที่ : </span>
-                        <span class="text-sm font-normal text-gray-900 dark:text-white">นิสิตลองแก้ปัญหาตามนี้ดูก่อนนะคะ...</span>
-                      </div>
-                    </div>
-                  </div>
+                <p
+                      value={userComment}
+                      onChange={(e) => setUserComment(e.target.value)}
+                      className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
+                    >
+                      {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
+                      {messages.map((message, index) => (
+                        <div key={index} className="text-gray-700">
+                          <div>
+                            {message.sender_user.full_name} : {message.message}
+                          </div>
+                        </div>
+                      ))}
+                    </p>
 
                 </div>
               </form>
 
               <form>
-                <label for="chat" class="sr-only">Your message</label>
+                <label for="userComment" class="sr-only">Your message</label>
                 <div className='flex justify-between'>
                   <div class="flex items-center px-3 py-2  ml-8 w-9/12 rounded-lg bg-gray-50 dark:bg-gray-700">
-                    <textarea id="chat" rows="1" class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="แสดงความคิดเห็น...."></textarea>
-                    <button type="submit" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                    <textarea id="userComment" rows="1" 
+                    value={userComment}
+                    onChange={(e) => setUserComment(e.target.value)} class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="แสดงความคิดเห็น...."></textarea>
+                    <button type="button" onClick={sendUserComment}
+                    class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                       <svg class="w-5 h-5 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                         <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
                       </svg>
@@ -170,7 +251,7 @@ function Inprogress() {
                     </button>
                   </div>
                   <div className='order-last'>
-                    <Button type="button" className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">เสร็จสิ้น</Button>
+                    <Button type="button" onClick={changeStatus} className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800">เสร็จสิ้น</Button>
                   </div>
                 </div>
               </form>

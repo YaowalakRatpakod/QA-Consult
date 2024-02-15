@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Header from '../../Layout/Header/Header'
+import Header from "../../Layout/Header/Header";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
-
 function Waitingprocecd() {
-  const {id} = useParams();
+  const { id } = useParams();
   const [requestInfo, setRequestInfo] = useState(null);
   const [userComment, setUserComment] = useState(""); // เก็บข้อความ
-  
+  const [messages, setMessages] = useState([]); // เก็บข้อความทั้งหมดที่ได้รับจากคลังข้อมูล
+
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
       case "ADM01":
@@ -80,7 +80,8 @@ function Waitingprocecd() {
           }
         );
 
-        console.log(response.data)
+        console.log("check fetch : ", response.data);
+
         setRequestInfo(response.data);
         if (response.data && response.data.user_comment) {
           setUserComment(response.data.user_comment);
@@ -88,15 +89,35 @@ function Waitingprocecd() {
       } catch (error) {
         console.error("Failed to fetch request info", error);
       }
-      
     };
     fetchRequestInfo();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setMessages(response.data);
+      } catch (error) {
+        console.error("Failed to fetch messages", error);
+      }
+    };
+    fetchMessages();
   }, [id]);
 
   const sendUserComment = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
-  
+
       const response = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
@@ -107,101 +128,224 @@ function Waitingprocecd() {
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
-  
+
       window.location.reload();
     } catch (error) {
       console.error("Failed to send user comment", error);
     }
   };
+  useEffect(() => {
+    // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
+    if (messages.length > 1) {
+      // ทำการเปลี่ยนสถานะเป็น "กำลังดำเนินการ"
+      changeStatus();
+    }
+  }, [messages]);
+
+  // เปลี่ยนสถานะ
+  const changeStatus = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+  
+      // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
+        { new_status: "Processing" }, // ส่งข้อมูลใหม่เพื่ออัปเดตสถานะ
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
+  } catch (error) {
+    console.error("Failed to mark request as Processing", error);
+  }
+};
+
   
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
 
-
-    
   return (
     <div>
       <Header />
-      <div className='ltr'>
-        <div className='flex flex-row  ms-28 p-4 text-medium text-black'>รายการขอคำปรึกษา </div>
+      <div className="ltr">
+        <div className="flex flex-row  ms-28 p-4 text-medium text-black">
+          รายการขอคำปรึกษา{" "}
+        </div>
         <Link to="/dashboard">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-24 right-32 w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="absolute top-24 right-32 w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
           </svg>
         </Link>
-
       </div>
 
-      <div className='flex flex-col items-center justify-around '>
+      <div className="flex flex-col items-center justify-around ">
         {/* <div className='flex justify-center w-full'></div> */}
-        <div className='mx-auto w-4/5 h-full  '>
-          <div className='rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 '>
-            <div className='flex'>
-              <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">รายละเอียดการขอคำปรึกษา </div>
-              <div className="text-[#F2F0DE] w-1/2 bg-[#F2F0DE] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5"> </div>
+        <div className="mx-auto w-4/5 h-full  ">
+          <div className="rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 ">
+            <div className="flex">
+              <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+                รายละเอียดการขอคำปรึกษา{" "}
+              </div>
+              <div className="text-[#F2F0DE] w-1/2 bg-[#F2F0DE] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+                {" "}
+              </div>
             </div>
 
-            <div className='flex mt-6 mb-1 ml-10 text-black font-semibold text-sm'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class=" h-3 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-              </svg> รายละเอียด</div>
+            <div className="flex mt-6 mb-1 ml-10 text-black font-semibold text-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class=" h-3 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>{" "}
+              รายละเอียด
+            </div>
 
-            <div className='bg-red-300 rounded-md mx-2 my-4 py-4 px-7'>
-              <div className='flex'>
-                <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm' name='name' >ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>{requestInfo.user.full_name}</span></div>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
-                  <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>{requestInfo.topic_id}</span></div>
-                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleString(
-                            "th-TH"
-                          )}</span> </div>
-
+            <div className="bg-red-300 rounded-md mx-2 my-4 py-4 px-7">
+              <div className="flex">
+                <div className="">
+                  <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                  >
+                    ชื่อ-นามสกุล :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.user.full_name}
+                    </span>
+                  </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    คณะ :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      เทคโนโลยีสารสนเทศและการสื่อสาร
+                    </span>
+                  </div>
+                  <div className="px-7 py-1 font-medium text-sm">
+                    รหัสหัวข้อ:{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.topic_id}
+                    </span>
+                  </div>
+                  <div class="px-7 py-1 font-medium text-sm">
+                    วันที่:{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {new Date(requestInfo.received_date).toLocaleString(
+                        "th-TH"
+                      )}
+                    </span>{" "}
+                  </div>
                 </div>
-                <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
-                  <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>{getSectionInThai(requestInfo.topic_section)}</span></div>
-
+                <div className="">
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                  </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    สาขา :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      วิศวกรรมซอฟต์แวร์
+                    </span>
+                  </div>
+                  <div className="px-7 py-1 font-medium text-sm">
+                    หัวข้อ:{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {getSectionInThai(requestInfo.topic_section)}
+                    </span>
+                  </div>
                 </div>
               </div>
 
               <form>
-                <div class='px-7 py-1 font-medium text-sm'>รายละเอียด
-                  <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>{requestInfo.details}</p>
+                <div class="px-7 py-1 font-medium text-sm">
+                  รายละเอียด
+                  <p className="bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1">
+                    {requestInfo.details}
+                  </p>
                 </div>
-                <div class='px-7 py-1 font-medium text-sm'>คอมเมนต์
-                  <p value={userComment} onChange={(e) => sendUserComment(e.target.value)} className='bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'></p>
+                <div class="px-7 py-1 font-medium text-sm  flex flex-col">
+                  คอมเมนต์
+                  <div className="flex-grow">
+                    <p
+                      value={userComment}
+                      onChange={(e) => setUserComment(e.target.value)}
+                      className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
+                    >
+                      {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
+                      {messages.map((message, index) => (
+                        <div key={index} className="text-gray-700">
+                          <div>
+                            {message.sender_user.full_name} : {message.message}
+                          </div>
+                        </div>
+                      ))}
+                    </p>
+                  </div>
                 </div>
               </form>
 
               <form>
-                <label for="userComment" class="sr-only">Your message</label>
+                <label for="userComment" class="sr-only">
+                  Your message
+                </label>
                 <div class="flex items-center px-3 py-2 mr-40 ml-8 rounded-lg bg-gray-50 dark:bg-gray-700">
-                  <textarea id="userComment" rows="1" value={userComment} onChange={(e) => setUserComment(e.target.value)} class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="แสดงความคิดเห็น...."></textarea>
-                  <button type="button" onClick={sendUserComment} class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
-                    <svg class="w-5 h-5 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                  <textarea
+                    id="userComment"
+                    rows="1"
+                    value={userComment}
+                    onChange={(e) => setUserComment(e.target.value)}
+                    class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="แสดงความคิดเห็น...."
+                  ></textarea>
+                  <button
+                    type="button"
+                    onClick={sendUserComment}
+                    class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
+                  >
+                    <svg
+                      class="w-5 h-5 rotate-90 rtl:-rotate-90"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 18 20"
+                    >
                       <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
                     </svg>
                     <span class="sr-only">Send message</span>
                   </button>
                 </div>
               </form>
-
-
-
             </div>
           </div>
-
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
-export default Waitingprocecd
+export default Waitingprocecd;
