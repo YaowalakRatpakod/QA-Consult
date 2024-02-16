@@ -229,7 +229,7 @@ function Createreq() {
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      วิศวกรรมซอฟต์แวร์
+                      {userInfo.major}
                     </span>
                   </div>
                   <div
