@@ -6,11 +6,6 @@ import { Link } from "react-router-dom";
 
 function DashboardOF() {
   const [allRequest, setAllRequest] = useState([]);
-  // const [filterOptions, setFilterOptions] = useState({
-  //   order: '',
-  //   topicId: '',
-  //   submissionDate: ''
-  // });
   const getStatusInThai = (status) => {
     switch (status) {
       case 'Pending':
@@ -91,23 +86,6 @@ function DashboardOF() {
     };
     fetchAllRequest();
   }, []);
-
-  // const handleFilterSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests-all/', {
-  //       params: {
-  //         order: filterOptions.order,
-  //         topicId: filterOptions.topicId,
-  //         submissionDate: filterOptions.submissionDate
-  //       }
-  //     });
-  //     setAllRequest(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching filtered requests:', error);
-  //   }
-  // };
-
 
   return (
     <div>

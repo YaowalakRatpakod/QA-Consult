@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Headeroffice from '../../Layout/Header/Headeroffice';
+import axios from 'axios';
 import Linech from './Linech';
 
 function Statistic() {
   const [filter, setFilter] = useState('week'); // เริ่มต้นด้วยการกรองตามสัปดาห์
+  const [allRequest, setAllRequest] = useState([]);
+  const [completedRequestCount, setCompletedRequestCount] = useState(0);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
+
+  useEffect(() => {
+    const fetchAllRequest = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests-all/success/');
+        setAllRequest(response.data);
+
+        // นับรายการที่เสร็จสิ้น
+        const completedCount = response.data.filter(request => request.status === 'เสร็จสิ้น').length;
+        setCompletedRequestCount(completedCount);
+      } catch (error) {
+        console.error('Error fetching requests:', error)
+      }
+    };
+    fetchAllRequest();
+  }, []);
 
   return (
     <div>
@@ -19,7 +38,7 @@ function Statistic() {
             <div className='flex justify-between'>
               <div className=''>
                 <div className='font-semibold text-[#091F59]'>สรุปรายการขอคำปรึกษา</div>
-                <div className='font-semibold text-[#091F59] text-2xl'>1000</div>
+                <div className='font-semibold text-[#091F59] text-2xl'>{completedRequestCount}</div>
                 <div className='font-semibold text-[#091F59]'>จำนวน</div>
               </div>
               <div className='flex items-center'>

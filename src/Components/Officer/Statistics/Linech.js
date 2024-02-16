@@ -1,91 +1,83 @@
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
+import axios from "axios";
 
 export default function Linech({ filter }) {
-    const chartRef = useRef(null);
-    const chartInstance = useRef(null);
+  const chartRef = useRef(null);
+  const chartInstance = useRef(null);
 
-    useEffect(() => {
+  useEffect(() => {
+    const fetchCompletedRequests = async () => {
+      try {
         if (chartInstance.current) {
             chartInstance.current.destroy();
-        }
+          }
+          
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/user-consultation-requests-all/success/"
+        );
+        const completedRequests = response.data;
 
-        const myChartRef = chartRef.current.getContext('2d');
+        const colors = ["#165BAA", "#A155B9", "#F765A3", "#ef4444", "#f97316"];
 
-        const labels = filter === 'week' ? ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์'] :
-            ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน'];
+        const labelSet = new Set(); // ใช้ Set เพื่อเก็บค่าหัวข้อที่มีอยู่แล้ว
 
-        const datasets = [
-            {
-                label: 'UP01 คำร้องทั่วไป',
-                data: filter === 'week' ? [10, 20, 30, 10, 50, 40] : [100, 200, 150, 300, 200, 250],
-                fill: false,
-                borderColor: '#165BAA',
-                backgroundColor: '#165BAA',
-                borderWidth: 2
-            },
-            {
-                label: 'UP08 คำร้องขอถอนรายวิชา โดยได้รับอักษร W',
-                data: filter === 'week' ? [10, 10, 20, 10, 5, 30] : [50, 30, 40, 60, 45, 55],
-                fill: false,
-                borderColor: '#A155B9',
-                backgroundColor: '#A155B9',
-                borderWidth: 2
-            },
-            {
-                label: 'UP03 คำร้องขอใบรายงานผลการศึกษา (Transcript)',
-                data: filter === 'week' ? [5, 10, 15, 10, 5, 40] : [30, 40, 50, 60, 70, 80],
-                fill: false,
-                borderColor: '#F765A3',
-                backgroundColor: '#F765A3',
-                borderWidth: 2
-            },
-            {
-                label: 'UP09 คำร้องขอเทียบโอนรายวิชา',
-                data: filter === 'week' ? [45, 40, 15, 10, 35, 40] : [80, 70, 60, 50, 40, 30],
-                fill: false,
-                borderColor: '#ef4444',
-                backgroundColor: '#ef4444',
-                borderWidth: 2
-            },
-            {
-                label: 'UP10 คำร้องขอย้ายคณะ/หลักสูตร/แผนการเรียน',
-                data: filter === 'week' ? [45, 10, 35, 10, 5, 10] : [20, 30, 40, 50, 60, 70],
-                fill: false,
-                borderColor: '#f97316',
-                backgroundColor: '#f97316',
-                borderWidth: 2
+         // ดึงข้อมูล topic_id และ topic_section จาก response และแยกออกมาเป็น labels สำหรับ Chart.js
+         const labels = completedRequests.map(request => `${request.topic_id} - ${request.topic_section}`);
+
+        // สร้าง datasets โดยใช้สีตามลำดับในอาร์เรย์ colors
+        const datasets = completedRequests.map((request, index) => {
+            const label = `${request.topic_id} - ${request.topic_section}`;
+            if (!labelSet.has(label)) { // ตรวจสอบว่าหัวข้อนี้เคยถูกสร้างไว้แล้วหรือไม่
+                labelSet.add(label); // เพิ่มหัวข้อเข้าไปใน Set เพื่อระบุว่าเคยสร้างไว้แล้ว
+                return {
+                    label: label,
+                    data: filter === "week" ? [1, 1, 1, 1, 1, 1] : [1, 1, 1, 1, 1, 1],
+                    fill: false,
+                    borderColor: colors[index % colors.length], // กำหนดสีให้กับแต่ละหัวข้อ
+                    backgroundColor: colors[index % colors.length],
+                    borderWidth: 2,
+                };
+            } else {
+                // หากหัวข้อซ้ำกันให้หา index ของหัวข้อที่ซ้ำ
+                const existingIndex = labels.findIndex(existingLabel => existingLabel === label);
+                // เพิ่มข้อมูลใหม่เข้าไปใน datasets ที่มี index เดียวกับหัวข้อที่ซ้ำ
+                datasets[existingIndex].data = datasets[existingIndex].data.map(value => value + 1);
+                return null; // ไม่สร้าง datasets ใหม่ เพราะมีข้อมูลซ้ำกันแล้ว
             }
-        ];
+        }).filter(dataset => dataset !== null); // กรองออกเฉพาะ datasets ที่ไม่เป็น null
+
+        const myChartRef = chartRef.current.getContext("2d");
 
         chartInstance.current = new Chart(myChartRef, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: datasets
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: datasets,
+          },
+          options: {
+            plugins: {
+              legend: {
+                position: "bottom",
+                align: "center",
+                display: true,
+              },
             },
-            options: {
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        align: 'center',
-                        display: true,
-                    }
-                },
-                order: 1 // กำหนดให้ข้อมูลใน datasets เรียงลำดับตามลำดับที่กำหนด
-            },
+            order: 1, // กำหนดให้ข้อมูลใน datasets เรียงลำดับตามลำดับที่กำหนด
+          },
         });
+      } catch (error) {
+        console.error("Error fetching completed requests:", error);
+      }
+    };
 
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-            }
-        };
-    }, [filter]);
+    fetchCompletedRequests();
 
-    return (
-        <div>
-            <canvas ref={chartRef} style={{ width: '150px', height: '150px' }} />
-        </div>
-    );
+  }, [filter]);
+
+  return (
+    <div>
+      <canvas ref={chartRef} style={{ width: "150px", height: "150px" }} />
+    </div>
+  );
 }
