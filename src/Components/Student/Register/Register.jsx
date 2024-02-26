@@ -4,12 +4,17 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Register = (event) => {
+  const [selectedOption, setSelectedOption] = useState("");
+  const handleSelected = (event) => {
+    setSelectedOption(event.target.value);
+  };
   const [formData, setFormData] = useState({
     full_name: "",
     tel: "",
     email: "",
     password: "",
     re_password: "",
+    major:"",
   });
 
   const [errors, setErrors] = useState({
@@ -18,9 +23,10 @@ const Register = (event) => {
     email: false,
     password: false,
     re_password: false,
+    major:false,
   })
 
-  const { full_name, phone, email, password, re_password } = formData;
+  const { full_name,phone, email, password, re_password} = formData;
 
   const handleChange = async (event) => {
     setFormData((prev) => ({
@@ -35,10 +41,7 @@ const Register = (event) => {
     }))
   };
 
-
   const navigate = useNavigate();
-
-
 
   // Create User
   const createUser = (event) => {
@@ -70,18 +73,22 @@ const Register = (event) => {
       return;
     }
 
+    // อัพเดตค่า major
+    const updatedFormData = { ...formData, major: selectedOption };
+
     let url = "http://127.0.0.1:8000/api/v1/auth/users/";
 
     axios
-      .post(url, formData)
+      .post(url, updatedFormData)
       .then(() => {
+        console.log(updatedFormData);
         setFormData({
           full_name: "",
           tel: "",
           email: "",
           password: "",
           re_password: "",
-          file: "",
+          major: "",
         });
 
         navigate("/");
@@ -142,10 +149,14 @@ const Register = (event) => {
             <div className="font-regular text-sm text-[#091F59]">
               สาขา
               <select
-                id="countries"
+                name="major"
+                onChange={handleSelected}
+                value={selectedOption}
+                required
                 class="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
               >
-                <option selected></option>
+                <option value="">เลือกสาขา</option>
+                
                 <option value="SE">สาขาวิชาวิศวกรรมซอฟต์แวร์</option>
                 <option value="CS">สาขาวิชาวิทยาการคอมพิวเตอร์</option>
                 <option value="CPE">สาขาวิชาวิศวกรรมคอมพิวเตอร์</option>
@@ -223,17 +234,6 @@ const Register = (event) => {
                   errors.re_password && 'border-red-500'
                 } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
               />
-            </div>
-          </div>
-          <div className="px-7 py-1">
-            <div className="font-medium text-sm text-[#091F59]">
-              ตารางเรียน
-              <input
-                className="block w-72 py-2.3 px-0 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                id="multiple_files"
-                type="file"
-                multiple
-              ></input>
             </div>
           </div>
           <div className="px-7 py-1">

@@ -138,6 +138,8 @@ function Waitingprocecd() {
       console.error("Failed to send user comment", error);
     }
   };
+
+  
   useEffect(() => {
     // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
     if (messages.length > 1) {

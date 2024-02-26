@@ -12,15 +12,12 @@ function Createreq() {
   const [topic, setTopic] = useState("");
   const [detail, setDetail] = useState("");
   const [date, setDate] = useState("");
-  // const [image, setImage] = useState(null)
-  // const [image, setImage] = useState(null)
   const [userInfo, setUserInfo] = useState("");
-  // const [consultationRequests, setConsultationRequests] = useState([]);
-  // const [consultationRequests, setConsultationRequests] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
     setTopic(event.target.value);
+    setTopicId(event.target.value);
   };
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -57,12 +54,11 @@ function Createreq() {
         full_name: userInfo.id,
         tel: userInfo.tel,
         faculty: "เทคโนโลยีสารสนเทศและการสื่อสาร", // ตั้งค่าให้ตรงกับข้อมูลจริง
-        major: "วิศวกรรมซอฟต์แวร์", // ตั้งค่าให้ตรงกับข้อมูลจริง
+        major: userInfo.major, // ตั้งค่าให้ตรงกับข้อมูลจริง
         topic_id: topicid,
         topic_section: topic,
         submission_date: date,
         details: detail,
-        // document: image, // ในกรณีที่ต้องการอัพโหลดไฟล์
         status: "Pending", // ตั้งค่าตามที่ต้องการ
       };
       // ส่งข้อมูลไปยัง api
@@ -318,7 +314,7 @@ function Createreq() {
                 onChange={(e) => setDetail(e.target.value)}
               />
 
-              <div class="px-7 py-2 font-medium text-sm">
+              {/* <div class="px-7 py-2 font-medium text-sm">
                 แนบเอกสารเพิ่มเติม :
                 <input
                   className="pl-2 w-72 pr-4 py-2.3 px-0 font-medium text-sm text-gray-900 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -330,7 +326,7 @@ function Createreq() {
                   *การเพิ่มไฟล์เอกสารสามารถเพิ่มได้แค่ไฟล์ประเภท pdf.
                   และขนาดไฟล์จะต้องไม่เกิน 25 MB
                 </p>
-              </div>
+              </div> */}
 
               <div className="grid justify-items-end">
                 <Button

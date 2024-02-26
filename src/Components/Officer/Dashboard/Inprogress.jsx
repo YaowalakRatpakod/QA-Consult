@@ -136,7 +136,7 @@ function Inprogress() {
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: infoUser.id,
-          receiver: requestInfo.user,
+          receiver: requestInfo.id,
           room: requestInfo.id,
           message: adminComment,
         },
@@ -282,8 +282,7 @@ function Inprogress() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>

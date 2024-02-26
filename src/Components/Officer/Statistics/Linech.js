@@ -1,58 +1,75 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState} from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
 export default function Linech({ filter }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+  const [topFiveTopicIds, setTopFiveTopicIds] = useState([]);
 
   useEffect(() => {
     const fetchCompletedRequests = async () => {
       try {
         if (chartInstance.current) {
-            chartInstance.current.destroy();
-          }
-          
+          chartInstance.current.destroy();
+        }
+
         const response = await axios.get(
           "http://127.0.0.1:8000/api/user-consultation-requests-all/success/"
         );
         const completedRequests = response.data;
 
-        const colors = ["#165BAA", "#A155B9", "#F765A3", "#ef4444", "#f97316"];
+        // Filter completed requests based on the selected filter (week/month)
+        const filteredRequests = completedRequests.filter(request => {
+          // Assuming request.date contains the date information
+          // Filter requests based on week/month logic here
+          return true; 
+        });
 
-        const labelSet = new Set(); // ใช้ Set เพื่อเก็บค่าหัวข้อที่มีอยู่แล้ว
+        // Count completed requests for each topic_id
+        const topicCountMap = {};
+        filteredRequests.forEach(request => {
+          const { topic_id } = request;
+          topicCountMap[topic_id] = (topicCountMap[topic_id] || 0) + 1;
+        });
 
-         // ดึงข้อมูล topic_id และ topic_section จาก response และแยกออกมาเป็น labels สำหรับ Chart.js
-         const labels = completedRequests.map(request => `${request.topic_id} - ${request.topic_section}`);
+        // Sort topic_id by completed request count in descending order
+        const sortedTopicIds = Object.keys(topicCountMap).sort(
+          (a, b) => topicCountMap[b] - topicCountMap[a]
+          );
 
-        // สร้าง datasets โดยใช้สีตามลำดับในอาร์เรย์ colors
-        const datasets = completedRequests.map((request, index) => {
-            const label = `${request.topic_id} - ${request.topic_section}`;
-            if (!labelSet.has(label)) { // ตรวจสอบว่าหัวข้อนี้เคยถูกสร้างไว้แล้วหรือไม่
-                labelSet.add(label); // เพิ่มหัวข้อเข้าไปใน Set เพื่อระบุว่าเคยสร้างไว้แล้ว
-                return {
-                    label: label,
-                    data: filter === "week" ? [1, 1, 1, 1, 1, 1] : [1, 1, 1, 1, 1, 1],
-                    fill: false,
-                    borderColor: colors[index % colors.length], // กำหนดสีให้กับแต่ละหัวข้อ
-                    backgroundColor: colors[index % colors.length],
-                    borderWidth: 2,
-                };
-            } else {
-                // หากหัวข้อซ้ำกันให้หา index ของหัวข้อที่ซ้ำ
-                const existingIndex = labels.findIndex(existingLabel => existingLabel === label);
-                // เพิ่มข้อมูลใหม่เข้าไปใน datasets ที่มี index เดียวกับหัวข้อที่ซ้ำ
-                datasets[existingIndex].data = datasets[existingIndex].data.map(value => value + 1);
-                return null; // ไม่สร้าง datasets ใหม่ เพราะมีข้อมูลซ้ำกันแล้ว
-            }
-        }).filter(dataset => dataset !== null); // กรองออกเฉพาะ datasets ที่ไม่เป็น null
+        // Get top five topic_ids
+        const topFive = sortedTopicIds.slice(0, 5);
+        setTopFiveTopicIds(topFive);
+
+        // Prepare datasets for Chart.js
+        const datasets = topFive.map((topic_id, index) => {
+          const color = getRandomColor();
+          const dataPoints = filteredRequests
+          .filter(request => request.topic_id === topic_id)
+          .map((request, i) => ({ x: i, y: i + 1 }));
+          
+
+          // const dataPoints = filteredRequests
+          // .filter(request => request.topic_id === topic_id)
+          // .map((request, i) => ({ x: i, y: topicCountMap[request.topic_id] }));
+
+          return {
+            label: topic_id,
+            data: dataPoints,
+            fill: false,
+            borderColor: color,
+            backgroundColor: color,
+            borderWidth: 2,
+          };
+        });
 
         const myChartRef = chartRef.current.getContext("2d");
 
         chartInstance.current = new Chart(myChartRef, {
           type: "line",
           data: {
-            labels: labels,
+            labels: topFive,
             datasets: datasets,
           },
           options: {
@@ -63,7 +80,19 @@ export default function Linech({ filter }) {
                 display: true,
               },
             },
-            order: 1, // กำหนดให้ข้อมูลใน datasets เรียงลำดับตามลำดับที่กำหนด
+            elements: {
+              line: {
+                tension: 0.4,
+              }
+            },
+            scales: {
+              y: {
+                ticks: {
+                  stepSize: 1,
+                }
+              }
+            },
+            order: 1, // Order the datasets
           },
         });
       } catch (error) {
@@ -74,6 +103,11 @@ export default function Linech({ filter }) {
     fetchCompletedRequests();
 
   }, [filter]);
+
+  // Function to generate random color
+  const getRandomColor = () => {
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  };
 
   return (
     <div>

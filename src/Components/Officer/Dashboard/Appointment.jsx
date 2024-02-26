@@ -3,12 +3,17 @@ import Header from "../../Layout/Header/Headeroffice";
 import { Button } from "flowbite-react";
 import ss from "../../../Picture/ss.png";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 function Appointment() {
-  const [date, setDate] = useState("");
   const { id } = useParams();
   const [requestInfo, setRequestInfo] = useState(null);
+  const navigate = useNavigate();
+  // การนัดหมาย
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [time, setTime] = useState("");
+  // การนัดหมาย จบ
 
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
@@ -94,6 +99,27 @@ function Appointment() {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/appointments/",
+        {
+          appointment_date: date,
+          location: location,
+          time: time,
+        }
+      );
+
+      console.log(response.data); // ประมวลผลการส่งข้อมูลจาก API
+      navigate("/dashboardOF");
+    } catch (error) {
+      console.error("Failed to create appointment", error);
+    }
+  };
+
+
   return (
     <div>
       <Header />
@@ -178,8 +204,7 @@ function Appointment() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>
@@ -239,6 +264,8 @@ function Appointment() {
                       สถานที่ :
                       <input
                         type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
                         className="bg-white w-8/12 h-10 mx-2 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1"
                         placeholder="กรอกสถานที่"
                       />
@@ -247,18 +274,10 @@ function Appointment() {
                       เวลาที่นัดหมาย :
                       <input
                         type="text"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
                         className="bg-white w-6/12 h-10 mx-2 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1"
                         placeholder="กรอกเวลา"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="px-7 py-1 font-medium text-sm">
-                      ตารางเรียน :{" "}
-                      <img
-                        className="h-15 w-15 rounded-md bg-white  p-5"
-                        src={ss}
-                        alt=""
                       />
                     </div>
                   </div>
@@ -269,6 +288,7 @@ function Appointment() {
                 <div>
                   <div className="order-last">
                     <Button
+                      onClick={handleSubmit}
                       type="button"
                       className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  px-2 py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >

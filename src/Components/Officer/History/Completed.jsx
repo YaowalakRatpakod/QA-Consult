@@ -256,8 +256,7 @@ function Completed() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>

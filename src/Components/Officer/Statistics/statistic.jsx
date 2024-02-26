@@ -19,7 +19,7 @@ function Statistic() {
         setAllRequest(response.data);
 
         // นับรายการที่เสร็จสิ้น
-        const completedCount = response.data.filter(request => request.status === 'เสร็จสิ้น').length;
+        const completedCount = response.data.filter(request => request.status === 'Completed').length;
         setCompletedRequestCount(completedCount);
       } catch (error) {
         console.error('Error fetching requests:', error)
