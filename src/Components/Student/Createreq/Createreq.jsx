@@ -225,7 +225,15 @@ function Createreq() {
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      วิศวกรรมซอฟต์แวร์
+                    {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
+                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
+                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
+                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
+                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
+                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
+                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
+                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div

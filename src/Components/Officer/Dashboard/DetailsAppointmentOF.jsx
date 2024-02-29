@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Header from "../../Layout/Header/Header";
+import Header from "../../Layout/Header/Headeroffice";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 
-function Completed() {
-  const { id } = useParams();
+function DetailsAppointmentOF() {
+  const { id } = useParams(); // ใช้ hook useParams เพื่อดึงค่า id จาก URL
   const [requestInfo, setRequestInfo] = useState(null);
-  const [userInfo, setUserInfo] = useState("");
-  const [messages, setMessages] = useState([]);
-
+  const [appointment, setAppointment] = useState(null);
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
       case "ADM01":
@@ -72,7 +70,7 @@ function Completed() {
 
         // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
         const response = await axios.get(
-          `http://127.0.0.1:8000/api/user-consultation-requests/${id}`,
+          `http://127.0.0.1:8000/api/user-consultation-requests-all/${id}/`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -90,14 +88,12 @@ function Completed() {
   }, [id]);
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchAppointment = async () => {
       try {
         // ดึง token จาก localStorage
         const accessToken = localStorage.getItem("access_token");
-
-        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/v1/auth/users/me/",
+          `http://127.0.0.1:8000/api/appointments/?consultation_request_id=${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -105,47 +101,28 @@ function Completed() {
           }
         );
 
-        setUserInfo(response.data);
+        console.log("Appointments:", response.data);
+        setAppointment(response.data);
       } catch (error) {
-        console.error("Failed to fetch user info", error);
-      }
-      
-    };
-    fetchUserInfo();
-  }, []);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        setMessages(response.data);
-      } catch (error) {
-        console.error("Failed to fetch messages", error);
+        console.error("Failed to fetch appointment:", error);
       }
     };
-    fetchMessages();
+
+    fetchAppointment();
   }, [id]);
 
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
+
   return (
     <div>
       <Header />
       <div className="ltr">
         <div className="flex flex-row  ms-28 p-4 text-medium text-black">
-          ประวัติคำถาม
+          การนัดหมาย{" "}
         </div>
-        <Link to="/history">
+        <Link to="/dashboardOF">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -169,7 +146,10 @@ function Completed() {
           <div className="rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 ">
             <div className="flex">
               <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
-                รายละเอียดการขอคำปรึกษา{" "}
+                การนัดหมาย
+              </div>
+              <div className="text-[#F2F0DE] w-1/2 bg-white rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+                {" "}
               </div>
             </div>
 
@@ -191,7 +171,7 @@ function Completed() {
               รายละเอียด
             </div>
 
-            <div className="bg-green-100 rounded-md mx-2 my-4 py-4 px-7">
+            <div className="bg-yellow-100 rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
                   <div
@@ -200,7 +180,7 @@ function Completed() {
                   >
                     ชื่อ-นามสกุล :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user.full_name}
+                      {requestInfo.user}
                     </span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
@@ -218,8 +198,7 @@ function Completed() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>
@@ -227,20 +206,12 @@ function Completed() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">0612548848</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
-                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
-                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
-                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
-                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
-                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
-                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
-                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      วิศวกรรมซอฟต์แวร์
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">
@@ -256,27 +227,39 @@ function Completed() {
                 <div class="px-7 py-1 font-medium text-sm">
                   รายละเอียด
                   <p className="bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1">
-                  {requestInfo.details}
+                    {requestInfo.details}
                   </p>
                 </div>
-                <div class="px-7 py-1 font-medium text-sm">
-                  คอมเมนต์
-                  <p
-                    className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
-                  >
-                    {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
-                    {messages.map((message, index) => (
-                      <div key={index} className="text-gray-700">
-                        <div>
-                          {message.sender_user.full_name} : {message.message}
+                {appointment && (
+                  <div>
+                    {appointment.map((item, index) => (
+                      <div key={index}>
+                        <div
+                          className="text-black px-7 py-1 font-medium text-sm"
+                          name="name"
+                        >
+                          นัดหมายวันที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                          {new Date(item.appointment_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      )}
+                          </span>
+                        </div>
+                        <div className="text-black px-7 py-1 font-medium text-sm">
+                          สถานที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.location}
+                          </span>
+                        </div>
+                        <div className="px-7 py-1 font-medium text-sm">
+                          เวลาที่นัดหมาย :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.time}
+                          </span>
                         </div>
                       </div>
                     ))}
-                  </p>
-                </div>
-                <p className="text-gray-500 text-center font-medium">
-                  ดำเนินการเสร็จสิ้น
-                </p>
+                  </div>
+                )}
               </form>
             </div>
           </div>
@@ -286,4 +269,4 @@ function Completed() {
   );
 }
 
-export default Completed;
+export default DetailsAppointmentOF;

@@ -197,11 +197,7 @@ function Dashboard() {
                           getStatusInThai(request.status) === "Processing"
                             ? new Date(
                                 request.submission_date
-                              ).toLocaleDateString("th-TH", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })
+                              ).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})
                             : null}
                         </td>
                         <td class="px-6 py-4">

@@ -102,6 +102,8 @@ function Appointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const accessToken = localStorage.getItem("access_token");
+
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/appointments/",
@@ -109,15 +111,23 @@ function Appointment() {
           appointment_date: date,
           location: location,
           time: time,
+          consultation_request_id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
       console.log(response.data); // ประมวลผลการส่งข้อมูลจาก API
-      navigate("/dashboardOF");
+      navigate(`/detailsAppointmentOF/${requestInfo.id}`);
     } catch (error) {
       console.error("Failed to create appointment", error);
     }
   };
+
+  
 
 
   return (

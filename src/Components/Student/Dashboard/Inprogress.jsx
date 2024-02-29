@@ -7,6 +7,7 @@ import { Link, useParams, useNavigate} from "react-router-dom";
 function Inprogress() {
   const {id} = useParams(); // ใช้ hook useParams เพื่อดึงค่า id จาก URL
   const [requestInfo, setRequestInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState("");
   const [userComment, setUserComment] = useState(""); // เก็บข้อความ
   const [messages, setMessages] = useState([]);
   const navigate = useNavigate(); // ใช้ hook เพื่อเปลี่ยนเส้นทาง
@@ -138,6 +139,31 @@ function Inprogress() {
     }
   };
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+
+        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/v1/auth/users/me/",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user info", error);
+      }
+      
+    };
+    fetchUserInfo();
+  }, []);
+
   // เปลี่ยนสถานะ
   const changeStatus = async () => {
     try {
@@ -199,14 +225,24 @@ function Inprogress() {
                   <div className='text-black px-7 py-1 font-medium text-sm' name='name' >ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>{requestInfo.user.full_name}</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
                   <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>{requestInfo.topic_id}</span></div>
-                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleString(
-                            "th-TH"
+                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                           )}</span> </div>
 
                 </div>
                 <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>{userInfo.tel}</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : 
+                  <span className='bg-white rounded-sm p-1'>
+                  {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
+                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
+                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
+                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
+                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
+                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
+                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
+                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                    </span></div>
                   <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>{getSectionInThai(requestInfo.topic_section)}</span></div>
 
                 </div>

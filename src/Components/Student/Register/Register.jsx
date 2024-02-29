@@ -6,8 +6,14 @@ import { useNavigate } from "react-router-dom";
 const Register = (event) => {
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelected = (event) => {
-    setSelectedOption(event.target.value);
+    const value = event.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      major: value,
+    }));
+    setSelectedOption(value);
   };
+  
   const [formData, setFormData] = useState({
     full_name: "",
     tel: "",
@@ -34,7 +40,7 @@ const Register = (event) => {
       [event.target.name]: event.target.value,
     }));
     console.log(formData);
-
+  
     setErrors((prev) => ({
       ...prev,
       [event.target.name]: false,
@@ -46,9 +52,9 @@ const Register = (event) => {
   // Create User
   const createUser = (event) => {
     event.preventDefault();
-
+  
     let hasError = false;
-
+  
     //ตรวจสอบ
     const newErrors = {};
     Object.entries(formData).forEach(([key, value]) => {
@@ -64,7 +70,7 @@ const Register = (event) => {
       newErrors['re_password'] = true;
       hasError = true;
     }
-
+  
     //ถ้ามีข้อผิดพลาดให้ตั้ง state ใหม่ 
     if (hasError) {
       setErrors(newErrors);
@@ -72,12 +78,12 @@ const Register = (event) => {
       window.alert('กรุณากรอกข้อมูลให้ครบทุกช่อง')
       return;
     }
-
+  
     // อัพเดตค่า major
-    const updatedFormData = { ...formData, major: selectedOption };
-
+    const updatedFormData = { ...formData, major: selectedOption }; // ใช้ selectedOption แทน major
+  
     let url = "http://127.0.0.1:8000/api/v1/auth/users/";
-
+  
     axios
       .post(url, updatedFormData)
       .then(() => {
@@ -90,13 +96,13 @@ const Register = (event) => {
           re_password: "",
           major: "",
         });
-
+  
         navigate("/");
         refreshPage();
       })
       .catch((err) => console.log(err));
   };
-
+  
 
 
   const refreshPage = () => {

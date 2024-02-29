@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 
 function Waitingprocecd() {
   const { id } = useParams();
+  const [userInfo, setUserInfo] = useState("");
   const [requestInfo, setRequestInfo] = useState(null);
   const [userComment, setUserComment] = useState(""); // เก็บข้อความ
   const [messages, setMessages] = useState([]); // เก็บข้อความทั้งหมดที่ได้รับจากคลังข้อมูล
@@ -63,6 +64,31 @@ function Waitingprocecd() {
         return "คำร้องขอถอนรายวิชาศึกษาทั่วไป (GE-Online)";
     }
   };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+
+        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/v1/auth/users/me/",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user info", error);
+      }
+      
+    };
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     const fetchRequestInfo = async () => {
@@ -142,7 +168,7 @@ function Waitingprocecd() {
   
   useEffect(() => {
     // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
-    if (messages.length > 1) {
+    if (messages.length > 0) {
       // ทำการเปลี่ยนสถานะเป็น "กำลังดำเนินการ"
       changeStatus();
     }
@@ -257,8 +283,7 @@ function Waitingprocecd() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>
@@ -266,12 +291,20 @@ function Waitingprocecd() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      วิศวกรรมซอฟต์แวร์
+                    {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
+                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
+                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
+                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
+                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
+                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
+                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
+                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">
