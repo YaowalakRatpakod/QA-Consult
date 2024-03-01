@@ -206,12 +206,20 @@ function DetailsAppointmentOF() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      วิศวกรรมซอฟต์แวร์
+                    {requestInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
+                    {requestInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
+                    {requestInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
+                    {requestInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
+                    {requestInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
+                    {requestInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
+                    {requestInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                    {requestInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
+                    {requestInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">

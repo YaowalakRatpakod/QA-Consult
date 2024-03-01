@@ -124,7 +124,7 @@ function History() {
                     <td class="px-6 py-4">{request.topic_id}</td>
                     <td class="px-6 py-4">{getSectionInThai(request.topic_section)}</td>
                     <td class="px-6 py-4">{request.user}</td>
-                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleString('th-TH')}</td>
+                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})}</td>
                      <td class="px-6 py-4"><Link to={`/completedOF/${request.id}`}>{getStatusInThai(request.status)}</Link></td>
                   </tr>
                   ))}  

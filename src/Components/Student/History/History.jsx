@@ -78,7 +78,7 @@ function History() {
     const fetchAllRequest = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests/',
+        const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests-user-all/',
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -92,6 +92,8 @@ function History() {
     };
     fetchAllRequest();
   }, []);
+
+  
   return (
     <div>
       <Header />
