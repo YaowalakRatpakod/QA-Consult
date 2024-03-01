@@ -99,6 +99,10 @@ function Dashboard() {
     fetchUserInfo();
   }, []);
 
+  const completedRequests = Array.isArray(userInfo)
+    ? userInfo.filter((request) => request.status !== "Completed")
+    : [];
+
   return (
     <div>
       <Header />
@@ -162,7 +166,7 @@ function Dashboard() {
                 <tbody>
                   {/* ใช้ map เพื่อแสดงรายการขอคำปรึกษาที่ได้รับมา */}
                   {Array.isArray(userInfo) &&
-                    userInfo.map((request, index) => (
+                    completedRequests.map((request, index) => (
                       <tr
                         key={index}
                         class="bg-white border-b dark:bg-[#F2F1DF] dark:border-gray-700"
@@ -178,28 +182,49 @@ function Dashboard() {
                         </td>
                         <td class="px-6 py-4">{request.user.full_name}</td>
                         <td class="px-6 py-4">
-                          {new Date(request.received_date).toLocaleString(
-                            "th-TH"
+                          {new Date(request.received_date).toLocaleDateString(
+                            "th-TH",
+                            {
+                              year: "numeric",
+                              month: "numeric",
+                              day: "numeric",
+                            }
                           )}
                         </td>
                         <td class="px-6 py-4">
                           {getStatusInThai(request.status) ===
                             "กำลังดำเนินการ" ||
                           getStatusInThai(request.status) === "Processing"
-                            ? new Date(request.submission_date).toLocaleString(
-                                "th-TH"
-                              )
+                            ? new Date(
+                                request.submission_date
+                              ).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})
                             : null}
                         </td>
                         <td class="px-6 py-4">
-                          {getStatusInThai(request.status) === "กำลังดำเนินการ" || getStatusInThai(request.status) === "Processing" ? (
-                            <Link to={`/inprogress/${request.id}`}> {getStatusInThai(request.status)} </Link>
-                          ) : getStatusInThai(request.status) === "เสร็จสิ้น" ? (
-                            <Link to={`/completed/${request.id}`}> {getStatusInThai(request.status)} </Link>
-                          ) : getStatusInThai(request.status) === "การนัดหมาย" ? (
-                            <Link to={`/appointment/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                          {getStatusInThai(request.status) ===
+                            "กำลังดำเนินการ" ||
+                          getStatusInThai(request.status) === "Processing" ? (
+                            <Link to={`/inprogress/${request.id}`}>
+                              {" "}
+                              {getStatusInThai(request.status)}{" "}
+                            </Link>
+                          ) : getStatusInThai(request.status) ===
+                            "เสร็จสิ้น" ? (
+                            <Link to={`/completed/${request.id}`}>
+                              {" "}
+                              {getStatusInThai(request.status)}{" "}
+                            </Link>
+                          ) : getStatusInThai(request.status) ===
+                            "การนัดหมาย" ? (
+                            <Link to={`/appointment/${request.id}`}>
+                              {" "}
+                              {getStatusInThai(request.status)}{" "}
+                            </Link>
                           ) : (
-                            <Link to={`/waiting/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                            <Link to={`/waiting/${request.id}`}>
+                              {" "}
+                              {getStatusInThai(request.status)}{" "}
+                            </Link>
                           )}
                         </td>
                       </tr>

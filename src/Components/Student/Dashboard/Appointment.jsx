@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom";
 function Appointment() {
   const {id} = useParams(); // ใช้ hook useParams เพื่อดึงค่า id จาก URL
   const [requestInfo, setRequestInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState("");
+  const [appointment, setAppointment] = useState(null);
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
       case "ADM01":
@@ -86,6 +88,57 @@ function Appointment() {
     };
     fetchRequestInfo();
   }, [id]);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+
+        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/v1/auth/users/me/",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("Failed to fetch user info", error);
+      }
+      
+    };
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/appointments/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        console.log("Appointments:", response.data);
+        setAppointment(response.data);
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+
+    fetchAppointment();
+  }, [id]);
+  
+
   
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -125,14 +178,23 @@ function Appointment() {
                   <div className='text-black px-7 py-1 font-medium text-sm' name='name' >ชื่อ-นามสกุล : <span className='bg-white rounded-sm p-1'>{requestInfo.user.full_name}</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
                   <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>{requestInfo.topic_id}</span></div>
-                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleString(
-                            "th-TH"
+                  <div class='px-7 py-1 font-medium text-sm'>วันที่: <span className='bg-white rounded-sm p-1'>{new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                           )}</span> </div>
 
                 </div>
                 <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>0612548848</span></div>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>วิศวกรรมซอฟต์แวร์</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>{userInfo.tel}</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm'>สาขา : <span className='bg-white rounded-sm p-1'>
+                  {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
+                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
+                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
+                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
+                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
+                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
+                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
+                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                    </span></div>
                   <div className='px-7 py-1 font-medium text-sm' >หัวข้อ: <span className='bg-white rounded-sm p-1'>{getSectionInThai(requestInfo.topic_section)}</span></div>
 
                 </div>
@@ -142,10 +204,36 @@ function Appointment() {
                 <div class='px-7 py-1 font-medium text-sm'>รายละเอียด
                   <p className='bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'>{requestInfo.details}</p>
                 </div>
-                <div className='text-black px-7 py-1 font-medium text-sm' name='name' >นัดหมายวันที่ :  <span className='bg-white rounded-sm p-1'> 10 ธ.ค. 2566 </span></div>
-                <div className='text-black px-7 py-1 font-medium text-sm'>สถานที่ :  <span className='bg-white rounded-sm p-1'>ห้องสำนักงานคณะ ชั้น 3 ตึก ICT</span></div>
-                <div className='px-7 py-1 font-medium text-sm' >เวลาที่นัดหมาย : <span className='bg-white rounded-sm p-1'>09:00</span></div>
-
+                {appointment && (
+                  <div>
+                    {appointment.map((item, index) => (
+                      <div key={index}>
+                        <div
+                          className="text-black px-7 py-1 font-medium text-sm"
+                          name="name"
+                        >
+                          นัดหมายวันที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                          {new Date(item.appointment_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      )}
+                          </span>
+                        </div>
+                        <div className="text-black px-7 py-1 font-medium text-sm">
+                          สถานที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.location}
+                          </span>
+                        </div>
+                        <div className="px-7 py-1 font-medium text-sm">
+                          เวลาที่นัดหมาย :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.time}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
               </form>
             </div>
           </div>

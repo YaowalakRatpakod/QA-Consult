@@ -11,6 +11,7 @@ import DashboardOF from './Components/Officer/Dashboard/DashboardOF';
 import WaitingprocecdOF from './Components/Officer/Dashboard/Waitingprocecd';
 import InprogressOF from './Components/Officer/Dashboard/Inprogress';
 import AppointmentOF from './Components/Officer/Dashboard/Appointment';
+import DetailsAppointmentOF from './Components/Officer/Dashboard/DetailsAppointmentOF';
 import Statistic from './Components/Officer/Statistics/statistic';
 import HistoryOF from './Components/Officer/History/History';
 import CompletedOF from './Components/Officer/History/Completed';
@@ -42,6 +43,7 @@ const App = () => {
             <Route path='/waitingOF/:id' element={<WaitingprocecdOF />} />
             <Route path='/inprogressOF/:id' element={<InprogressOF />} />
             <Route path='/appointmentOF/:id' element={<AppointmentOF />} />
+            <Route path='/detailsAppointmentOF/:id' element={<DetailsAppointmentOF />} />
             <Route path="/statistic" element={<Statistic />} />
             <Route path="/historyOF/" element={<HistoryOF />} />
             <Route path='/completedOF/:id' element={<CompletedOF />} />

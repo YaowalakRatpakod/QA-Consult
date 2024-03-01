@@ -83,12 +83,11 @@ function Waitingprocecd() {
         console.log("check fetch : ", response.data);
         setInfoUser(response.data);
       } catch (error) {
-        console.error('Failed to update request status:', error);
+        console.error("Failed to update request status:", error);
       }
     };
     fetchInfoUser();
-  },[]);
-  
+  }, []);
 
   useEffect(() => {
     const fetchRequestInfo = async () => {
@@ -115,40 +114,52 @@ function Waitingprocecd() {
     };
     fetchRequestInfo();
   }, [id]);
-  
+
   const sendAdminComment = async () => {
     try {
-        if (!adminComment.trim()) {
-            console.error("Admin comment is empty");
-            return;
-        }
-        
-        // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
-        if (!requestInfo || !requestInfo.user || !infoUser.id) {
-          console.error("User ID is not available in request info");
-          return;
-        }
+      if (!adminComment.trim()) {
+        console.error("Admin comment is empty");
+        return;
+      }
 
-        const accessToken = localStorage.getItem("access_token");
-        // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
+      const accessToken = localStorage.getItem("access_token");
 
-        const sendMessageResponse = await axios.post(
-            "http://127.0.0.1:8000/api/send-messages/",
-            {
-                sender: infoUser.id,
-                receiver: requestInfo.id,
-                room: requestInfo.id,
-                message: adminComment,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            }
-        );
+      // ดึงข้อมูลห้องจาก API endpoint ก่อนที่จะส่งข้อความ
+      const roomResponse = await axios.get(
+        `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!roomResponse.data[0].room) {
+        console.log(roomResponse.data[0].room);
+        return;
+      }
+
+      console.log("Sender ID:", infoUser.id); // แสดง ID ของผู้ส่ง (แอดมิน)
+      console.log("Receiver ID:", requestInfo.user_id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
+      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
+
+      const sendMessageResponse = await axios.post(
+        "http://127.0.0.1:8000/api/send-messages/",
+        {
+          sender: infoUser.id,
+          receiver: requestInfo.user_id,
+          room: roomResponse.data[0].room,
+          message: adminComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       window.location.reload();
     } catch (error) {
-      console.error("Failed to send admin comment", error);
+      console.error("การส่งความคิดเห็นของแอดมินล้มเหลว", error);
     }
   };
 
@@ -156,11 +167,14 @@ function Waitingprocecd() {
     const fetchMessages = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(`http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setMessages(response.data);
       } catch (error) {
         console.error("Failed to fetch messages", error);
@@ -168,7 +182,6 @@ function Waitingprocecd() {
     };
     fetchMessages();
   }, [id]);
-
 
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -257,8 +270,7 @@ function Waitingprocecd() {
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleString(
-                        "th-TH"
+                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
                       )}
                     </span>{" "}
                   </div>
@@ -309,12 +321,14 @@ function Waitingprocecd() {
                     onChange={(e) => setAdminComment(e.target.value)}
                     className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
                   >
-                      {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
-                  {messages.map((message, index) => (
-                  <div key={index} className="text-gray-700">
-                    <div>{message.sender_user.full_name} : {message.message}</div>
-                  </div>
-                ))}
+                    {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
+                    {messages.map((message, index) => (
+                      <div key={index} className="text-gray-700">
+                        <div>
+                          {message.sender_user.full_name} : {message.message}
+                        </div>
+                      </div>
+                    ))}
                   </p>
                 </div>
               </form>

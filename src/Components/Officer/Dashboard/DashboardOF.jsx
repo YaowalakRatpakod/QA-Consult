@@ -87,6 +87,8 @@ function DashboardOF() {
     fetchAllRequest();
   }, []);
 
+  const completedRequests = allRequest.filter((request) => request.status !== 'Completed');
+
   return (
     <div>
       <Headeroffice />
@@ -122,27 +124,37 @@ function DashboardOF() {
                   </tr>
                 </thead>
                 <tbody>
-                  {allRequest.map((request, index) => (
+                  {completedRequests.map((request, index) => (
                     <tr class="bg-[#F2F1DF] border-b dark:bg-[#F2F1DF] dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">{index +1}</th>
                     <td class="px-6 py-4">{request.topic_id}</td>
                     <td class="px-6 py-4">{getSectionInThai(request.topic_section)}</td>
                     <td class="px-6 py-4">{request.user}</td>
-                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleString('th-TH')}</td>
+                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' })}</td>
                     <td class="px-6 py-4">{getStatusInThai(request.status) === 'กำลังดำเนินการ' || getStatusInThai(request.status) === 'Processing' ?
-                        new Date(request.submission_date).toLocaleString('th-TH')
+                        new Date(request.submission_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})
                         :null}</td>
-                     <td class="px-6 py-4">
-                          {getStatusInThai(request.status) === "กำลังดำเนินการ" || getStatusInThai(request.status) === "Processing" ? (
-                            <Link to={`/inprogressOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
-                          ) : getStatusInThai(request.status) === "เสร็จสิ้น" ? (
-                            <Link to={`/completedOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
-                          ) : getStatusInThai(request.status) === "การนัดหมาย" ? (
-                            <Link to={`/appointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                    <td className="px-6 py-4">
+                        {getStatusInThai(request.status) === "กำลังดำเนินการ" || getStatusInThai(request.status) === "Processing" ? (
+                          <Link to={`/inprogressOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                        ) : getStatusInThai(request.status) === "เสร็จสิ้น" ? (
+                          // ตรวจสอบว่ามีการนัดหมายหรือไม่ และมีสถานะเดิมหรือไม่
+                          request.appointment_date && request.status === "Completed" ? (
+                            <Link to={`/detailAppointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
                           ) : (
-                            <Link to={`/waitingOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
-                          )}
-                        </td>
+                            <Link to={`/completedOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                          )
+                        ) : getStatusInThai(request.status) === "การนัดหมาย" ? (
+                          // ตรวจสอบว่ามีการนัดหมายหรือไม่ และมีสถานะเดิมหรือไม่
+                          request.appointment_date && request.status === "Appointment" ? (
+                            <Link to={`/detailsAppointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                          ) : (
+                            <Link to={`/appointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                          )
+                        ) : (
+                          <Link to={`/waitingOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                        )}
+                      </td>
                   </tr>
                   ))}  
                 </tbody>

@@ -50,9 +50,7 @@ const Header = () => {
             <li>
               <Link to="/history" className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700">ประวัติคำถาม</Link>
             </li>
-            <li>
-              <Link to="/notifications" className="block py-2 px-3 text-white bg-blue-700 rounded xl:bg-transparent xl:p-0 dark:text-white  xl:hover:text-blue-700">แจ้งเตือน</Link>
-            </li>
+
           </ul>
         </div>
         <div class="relative inline-block text-center">

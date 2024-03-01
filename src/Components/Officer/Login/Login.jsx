@@ -121,7 +121,7 @@ const Login = () => {
             >
               ไม่มีบัญชีใช่หรือไม่?{" "}
               <a
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/registerOF")}
                 class="font-medium text-blue-600 hover:underline dark:text-blue-500"
               >
                 ลงทะเบียน

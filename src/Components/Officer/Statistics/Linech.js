@@ -17,20 +17,11 @@ export default function Linech({ filter }) {
         const response = await axios.get(
           "http://127.0.0.1:8000/api/user-consultation-requests-all/success/"
         );
-        const { completedRequests } = response.data;
-
-        // console.log("check res : ", completedRequests);
-
-        // Filter completed requests based on the selected filter (week/month)
-        const filteredRequests = completedRequests.filter(request => {
-          // Assuming request.date contains the date information
-          // Filter requests based on week/month logic here
-          return true;
-        });
+        const completedRequests = response.data;
 
         // Count completed requests for each topic_id
         const topicCountMap = {};
-        filteredRequests.forEach(request => {
+        completedRequests.forEach((request) => {
           const { topic_id } = request;
           topicCountMap[topic_id] = (topicCountMap[topic_id] || 0) + 1;
         });
@@ -47,23 +38,9 @@ export default function Linech({ filter }) {
         // Prepare datasets for Chart.js
         const datasets = topFive.map((topic_id, index) => {
           const color = getRandomColor();
-          const dataPoints = filteredRequests
-            .filter(request => request.topic_id === topic_id)
-            .map((request, i) => ({ x: i, y: i + 1 }));
+          const dataPoint = topicCountMap[topic_id];
 
-
-          // const dataPoints = filteredRequests
-          // .filter(request => request.topic_id === topic_id)
-          // .map((request, i) => ({ x: i, y: topicCountMap[request.topic_id] }));
-
-          return {
-            label: topic_id,
-            data: dataPoints,
-            fill: false,
-            borderColor: color,
-            backgroundColor: color,
-            borderWidth: 2,
-          };
+          return dataPoint;
         });
 
         const myChartRef = chartRef.current.getContext("2d");
@@ -72,29 +49,30 @@ export default function Linech({ filter }) {
           type: "line",
           data: {
             labels: topFive,
-            datasets: datasets,
+            datasets: [
+              {
+                label: "Number of Successful Requests",
+                data: datasets,
+                backgroundColor: Array(5).fill(getRandomColor()),
+                borderColor: Array(5).fill(getRandomColor()),
+                borderWidth: 1,
+              },
+            ],
           },
           options: {
             plugins: {
               legend: {
-                position: "bottom",
-                align: "center",
-                display: true,
+                display: false,
               },
-            },
-            elements: {
-              line: {
-                tension: 0.4,
-              }
             },
             scales: {
               y: {
                 ticks: {
                   stepSize: 1,
-                }
-              }
+                },
+                beginAtZero: true,
+              },
             },
-            order: 1, // Order the datasets
           },
         });
       } catch (error) {
@@ -103,7 +81,6 @@ export default function Linech({ filter }) {
     };
 
     fetchCompletedRequests();
-
   }, [filter]);
 
   // Function to generate random color
@@ -113,7 +90,7 @@ export default function Linech({ filter }) {
 
   return (
     <div>
-      <canvas ref={chartRef} style={{ width: "150px", height: "150px" }} />
+      <canvas ref={chartRef} style={{ width: "500px", height: "500px" }} />
     </div>
   );
 }
