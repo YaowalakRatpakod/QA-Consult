@@ -136,7 +136,7 @@ function Inprogress() {
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: infoUser.id,
-          receiver: requestInfo.user,
+          receiver: requestInfo.id,
           room: requestInfo.id,
           message: adminComment,
         },
