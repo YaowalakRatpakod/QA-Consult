@@ -39,11 +39,11 @@ function Createreq() {
       } catch (error) {
         console.error("Failed to fetch user info", error);
       }
-      
+
     };
     fetchUserInfo();
   }, []);
-  
+
 
   const handleCreateRequest = async () => {
     try {
@@ -147,17 +147,13 @@ function Createreq() {
             <div className="bg-[#F2F0DE] rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
-                  <div
-                    className="text-black px-7 py-1 font-medium text-sm"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  >
-                    ชื่อ-นามสกุล :{" "}
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    รหัสนิสิต :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {userInfo.full_name}
+                      {userInfo.tel}
                     </span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
                     <span className="bg-white rounded-sm p-1">
@@ -204,6 +200,12 @@ function Createreq() {
                       <option value="UP30">UP30</option>
                     </select>
                   </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {userInfo.tel}
+                    </span>
+                  </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:
                     <input
@@ -216,24 +218,30 @@ function Createreq() {
                   </div>
                 </div>
                 <div className="">
-                  <div className="text-black px-7 py-1 font-medium text-sm">
-                    เบอร์โทร :{" "}
+                  <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  >
+                    ชื่อ-นามสกุล :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {userInfo.tel}
+                      {userInfo.full_name}
                     </span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {userInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
-                    {userInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
-                    {userInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
-                    {userInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
-                    {userInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
-                    {userInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
-                    {userInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {userInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
-                    {userInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      {userInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
+                      {userInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
+                      {userInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
+                      {userInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
+                      {userInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
+                      {userInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
+                      {userInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                      {userInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
+                      {userInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div
@@ -242,8 +250,8 @@ function Createreq() {
                   >
                     หัวข้อ:
                     <select
-                    
-                    onChange={handleChange}
+
+                      onChange={handleChange}
                       id="countries"
                       class="bg-white rounded-sm py-1 w-50 py-2.3 px-2 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
                     >

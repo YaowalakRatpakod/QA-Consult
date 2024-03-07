@@ -102,7 +102,12 @@ function DetailsAppointmentOF() {
         );
 
         console.log("Appointments:", response.data);
-        setAppointment(response.data);
+
+        // กรองข้อมูลการนัดหมายเพื่อแสดงเฉพาะ ID ที่ตรงกับ ID ที่คุณมี
+      const filteredAppointments = response.data.filter(
+        (item) => item.consultation_request_id === parseInt(id)
+      );
+      setAppointment(filteredAppointments);
       } catch (error) {
         console.error("Failed to fetch appointment:", error);
       }
@@ -206,20 +211,12 @@ function DetailsAppointmentOF() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">0612548848</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {requestInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
-                    {requestInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
-                    {requestInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
-                    {requestInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
-                    {requestInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
-                    {requestInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
-                    {requestInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {requestInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
-                    {requestInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      วิศวกรรมซอฟต์แวร์
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">

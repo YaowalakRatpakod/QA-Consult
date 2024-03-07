@@ -116,37 +116,37 @@ function Completed() {
 
   const sendAdminComment = async () => {
     try {
-        if (!adminComment.trim()) {
-            console.error("Admin comment is empty");
-            return;
+      if (!adminComment.trim()) {
+        console.error("Admin comment is empty");
+        return;
+      }
+
+      // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
+      if (!requestInfo || !requestInfo.user || !infoUser.id) {
+        console.error("User ID is not available in request info");
+        return;
+      }
+      console.log(id)
+
+      const accessToken = localStorage.getItem("access_token");
+      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
+
+
+
+      const sendMessageResponse = await axios.post(
+        "http://127.0.0.1:8000/api/send-messages/",
+        {
+          sender: infoUser.id,
+          receiver: id,
+          room: requestInfo.id,
+          message: adminComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
         }
-        
-        // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
-        if (!requestInfo || !requestInfo.user || !infoUser.id) {
-          console.error("User ID is not available in request info");
-          return;
-        }
-        console.log(id)
-
-        const accessToken = localStorage.getItem("access_token");
-        // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
-
-        
-
-        const sendMessageResponse = await axios.post(
-            "http://127.0.0.1:8000/api/send-messages/",
-            {
-                sender: infoUser.id,
-                receiver: id,
-                room: requestInfo.id,
-                message: adminComment,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            }
-        );
+      );
       window.location.reload();
     } catch (error) {
       console.error("Failed to send admin comment", error);
@@ -232,14 +232,9 @@ function Completed() {
             <div className="bg-green-100 rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
-                  <div
-                    className="text-black px-7 py-1 font-medium text-sm"
-                    name="name"
-                  >
-                    ชื่อ-นามสกุล :{" "}
-                    <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user}
-                    </span>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    รหัสนิสิต :{" "}
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -253,32 +248,42 @@ function Completed() {
                       {requestInfo.topic_id}
                     </span>
                   </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                  </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
                       )}
                     </span>{" "}
                   </div>
                 </div>
 
                 <div className="">
-                  <div className="text-black px-7 py-1 font-medium text-sm">
-                    เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                  <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                  >
+                    ชื่อ-นามสกุล :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.user}
+                    </span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {requestInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
-                    {requestInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
-                    {requestInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
-                    {requestInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
-                    {requestInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
-                    {requestInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
-                    {requestInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {requestInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
-                    {requestInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      {requestInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
+                      {requestInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
+                      {requestInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
+                      {requestInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
+                      {requestInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
+                      {requestInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
+                      {requestInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                      {requestInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
+                      {requestInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">
@@ -305,7 +310,7 @@ function Completed() {
                 <div class="px-7 py-1 font-medium text-sm">
                   รายละเอียด
                   <p className="bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1">
-                  {requestInfo.details}
+                    {requestInfo.details}
                   </p>
                 </div>
                 <div class="px-7 py-1 font-medium text-sm">
@@ -316,18 +321,102 @@ function Completed() {
                     onChange={(e) => setAdminComment(e.target.value)}
                     className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
                   >
-                      {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
-                  {messages.map((message, index) => (
-                  <div key={index} className="text-gray-700">
-                    <div>{message.sender_user.full_name} : {message.message}</div>
-                  </div>
-                ))}
+                    {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
+                    {messages.map((message, index) => (
+                      <div key={index} className="text-gray-700">
+                        <div>{message.sender_user.full_name} : {message.message}</div>
+                      </div>
+                    ))}
                   </p>
                 </div>
                 <p className="text-gray-500 text-center font-medium">
                   ดำเนินการเสร็จสิ้น
                 </p>
               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="ltr">
+        <div className="flex flex-row  ms-28 p-4 text-medium text-black">
+          การนัดหมาย{" "}
+        </div>
+        <Link to="/dashboardOF">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="absolute top-24 right-32 w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </Link>
+      </div>
+      <div className="flex flex-col items-center justify-around ">
+        {/* <div className='flex justify-center w-full'></div> */}
+        <div className="mx-auto w-4/5 h-full  ">
+          <div className="rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 ">
+            <div className="flex">
+              <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+                การนัดหมาย{" "}
+              </div>
+              
+            </div>
+
+            <div className="flex mt-6 mb-1 ml-10 text-black font-semibold text-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class=" h-3 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>{" "}
+              รายละเอียด
+            </div>
+
+            <div className="bg-green-100 rounded-md mx-2 my-4 py-4 px-7">
+
+              <div>
+                <div
+                  className="text-black px-7 py-1 font-medium text-sm"
+                  name="name"
+                >
+                  นัดหมายวันที่ :{" "}
+                  <span className="bg-white rounded-sm p-1">
+                    {new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
+                    )}
+                  </span>
+                </div>
+                <div className="text-black px-7 py-1 font-medium text-sm">
+                  สถานที่ :{" "}
+                  <span className="bg-white rounded-sm p-1">
+
+                  </span>
+                </div>
+                <div className="px-7 py-1 font-medium text-sm">
+                  เวลาที่นัดหมาย :{" "}
+                  <span className="bg-white rounded-sm p-1">
+
+                  </span>
+                </div>
+              </div>
+              <p className="text-gray-500 text-center font-medium">
+                  ดำเนินการเสร็จสิ้น
+                </p>
+
             </div>
           </div>
         </div>

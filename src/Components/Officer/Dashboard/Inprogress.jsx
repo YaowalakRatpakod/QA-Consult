@@ -10,6 +10,11 @@ function Inprogress() {
   const [requestInfo, setRequestInfo] = useState(null);
   const [adminComment, setAdminComment] = useState(""); // เก็บข้อความ
   const [messages, setMessages] = useState([]);
+  // การนัดหมาย
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [time, setTime] = useState("");
+  // การนัดหมาย จบ
 
   const getSectionInThai = (topic_section) => {
     switch (topic_section) {
@@ -122,22 +127,33 @@ function Inprogress() {
         return;
       }
 
-      // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
-      if (!requestInfo || !requestInfo.user|| !infoUser.id) {
-        console.error("User ID is not available in request info");
+      const accessToken = localStorage.getItem("access_token");
+
+      // ดึงข้อมูลห้องจาก API endpoint ก่อนที่จะส่งข้อความ
+      const roomResponse = await axios.get(
+        `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!roomResponse.data[0].room) {
+        console.log(roomResponse.data[0].room);
         return;
       }
-      console.log(requestInfo.user);
 
-      const accessToken = localStorage.getItem("access_token");
-      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
+      console.log("Sender ID:", infoUser.id); // แสดง ID ของผู้ส่ง (แอดมิน)
+      console.log("Receiver ID:", requestInfo.user_id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
+      console.log("Room ID:", roomResponse.data[0].room);
 
       const sendMessageResponse = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: infoUser.id,
-          receiver: requestInfo.id,
-          room: requestInfo.id,
+          receiver: requestInfo.user_id,
+          room: roomResponse.data[0].room,
           message: adminComment,
         },
         {
@@ -148,7 +164,7 @@ function Inprogress() {
       );
       window.location.reload();
     } catch (error) {
-      console.error("Failed to send admin comment", error);
+      console.error("การส่งความคิดเห็นของแอดมินล้มเหลว", error);
     }
   };
 
@@ -172,11 +188,39 @@ function Inprogress() {
     fetchMessages();
   }, [id]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/appointments/",
+        {
+          appointment_date: date,
+          location: location,
+          time: time,
+          consultation_request_id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      console.log(response.data); // ประมวลผลการส่งข้อมูลจาก API
+      navigate(`/detailsAppointmentOF/${requestInfo.id}`);
+    } catch (error) {
+      console.error("Failed to create appointment", error);
+    }
+  };
+
   // เปลี่ยนสถานะ
   const changeStatus = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
-  
+
       // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
       const response = await axios.put(
         `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
@@ -188,11 +232,11 @@ function Inprogress() {
         }
       );
       // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
-    navigate("/dashboardOF");
-  } catch (error) {
-    console.error("Failed to mark request as completed", error);
-  }
-};
+      navigate("/dashboardOF");
+    } catch (error) {
+      console.error("Failed to mark request as completed", error);
+    }
+  };
 
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -233,7 +277,7 @@ function Inprogress() {
                 รายละเอียดการขอคำปรึกษา{" "}
               </div>
               <div className="text-[#091F59] w-1/2 bg-[#F2F0DE] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
-                การนัดหมาย
+
               </div>
             </div>
 
@@ -258,14 +302,9 @@ function Inprogress() {
             <div className="bg-orange-300 rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
-                  <div
-                    className="text-black px-7 py-1 font-medium text-sm"
-                    name="name"
-                  >
-                    ชื่อ-นามสกุล :{" "}
-                    <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user}
-                    </span>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    รหัสนิสิต :{" "}
+                    <span className="bg-white rounded-sm p-1">0612548848</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -279,32 +318,34 @@ function Inprogress() {
                       {requestInfo.topic_id}
                     </span>
                   </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                  </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
                       )}
                     </span>{" "}
                   </div>
                 </div>
 
                 <div className="">
-                  <div className="text-black px-7 py-1 font-medium text-sm">
-                    เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                  <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                  >
+                    ชื่อ-นามสกุล :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.user}
+                    </span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {requestInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
-                    {requestInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
-                    {requestInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
-                    {requestInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
-                    {requestInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
-                    {requestInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
-                    {requestInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {requestInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
-                    {requestInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      วิศวกรรมซอฟต์แวร์
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">
@@ -331,7 +372,7 @@ function Inprogress() {
                 <div class="px-7 py-1 font-medium text-sm">
                   รายละเอียด
                   <p className="bg-white w-full h-20 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1">
-                  {requestInfo.details}
+                    {requestInfo.details}
                   </p>
                 </div>
                 <div class="px-7 py-1 font-medium text-sm">
@@ -384,13 +425,125 @@ function Inprogress() {
                       <span class="sr-only">Send message</span>
                     </button>
                   </div>
-                  <div className="order-last">
-                    <Button
-                      onClick={changeStatus}
-                      className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  px-2 py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  <div className='basis-1/4 inline-flex justify-center'>
+                    <button type="button" onClick={changeStatus} className=" bg-[#F2F0DE] shadow-lg hover:bg-orange-400 text-[#091F59] font-bold py-2 px-4 rounded-md  ">การนัดหมาย</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="ltr">
+        <div className="flex flex-row  ms-28 p-4 text-medium text-black">
+          การนัดหมาย{" "}
+        </div>
+        <Link to="/dashboardOF">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="absolute top-24 right-32 w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </Link>
+      </div>
+
+      <div className="flex flex-col items-center justify-around ">
+        {/* <div className='flex justify-center w-full'></div> */}
+        <div className="mx-auto w-4/5 h-full  ">
+          <div className="rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 ">
+            <div className="flex">
+              <div className="text-[#F2F0DE] w-1/2 bg-[#091F59] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+                การนัดหมาย{" "}
+              </div>
+              <div className="text-[#091F59] w-1/2 bg-[#F2F0DE] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
+
+              </div>
+            </div>
+
+            <div className="flex mt-6 mb-1 ml-10 text-black font-semibold text-sm">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class=" h-3 w-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>{" "}
+              รายละเอียด
+            </div>
+
+            <div className="bg-yellow-100  rounded-md mx-2 my-4 py-4 px-7">
+
+
+              <form>
+
+                <div className="flex">
+                  <div>
+                    <div class="px-7 py-1 font-medium text-sm">
+                      นัดหมายวันที่ :
+                      <input
+                        type="date"
+                        className="bg-white rounded-sm form-control form-control-lg px-1 py-1 mx-2"
+                        name="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex text-black px-7 py-1 font-medium text-sm">
+                      สถานที่ :
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="bg-white w-8/12 h-10 mx-2 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1"
+                        placeholder="กรอกสถานที่"
+                      />
+                    </div>
+                    <div className="px-7 py-1 font-medium text-sm">
+                      เวลาที่นัดหมาย :
+                      <input
+                        type="text"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        className="bg-white w-6/12 h-10 mx-2 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1"
+                        placeholder="กรอกเวลา"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <form>
+                <div>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={handleSubmit}
+                      type="button"
+                      className=" bg-blue-900 shadow-lg hover:bg-[#091F59]  text-white font-bold py-2 px-4 rounded  mt-8 mx-2"
                     >
                       การนัดหมาย
-                    </Button>
+                    </button>
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  mt-8 mx-2">
+                      เลื่อนเวลานัดหมาย
+                    </button>
+                    <button className="bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded  mt-8 mx-2">
+                      เสร็จสิ้น
+                    </button>
                   </div>
                 </div>
               </form>

@@ -161,7 +161,7 @@ const Register = (event) => {
                 required
                 class="block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
               >
-                <option value="">เลือกสาขา</option>
+                <option value=""></option>
                 
                 <option value="SE">สาขาวิชาวิศวกรรมซอฟต์แวร์</option>
                 <option value="CS">สาขาวิชาวิทยาการคอมพิวเตอร์</option>

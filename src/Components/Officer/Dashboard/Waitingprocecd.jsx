@@ -221,7 +221,7 @@ function Waitingprocecd() {
                 รายละเอียดการขอคำปรึกษา{" "}
               </div>
               <div className="text-[#091F59] w-1/2 bg-[#F2F0DE] rounded-md focus:outline-none font-semibold text-xs px-4 py-2.5">
-                การนัดหมาย
+                
               </div>
             </div>
 
@@ -246,14 +246,9 @@ function Waitingprocecd() {
             <div className="bg-red-300 rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
-                  <div
-                    className="text-black px-7 py-1 font-medium text-sm"
-                    name="name"
-                  >
-                    ชื่อ-นามสกุล :{" "}
-                    <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user}
-                    </span>
+                <div className="text-black px-7 py-1 font-medium text-sm">
+                    รหัสนิสิต :{" "}
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -267,6 +262,10 @@ function Waitingprocecd() {
                       {requestInfo.topic_id}
                     </span>
                   </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                  </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
@@ -277,10 +276,16 @@ function Waitingprocecd() {
                 </div>
 
                 <div className="">
-                  <div className="text-black px-7 py-1 font-medium text-sm">
-                    เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                  >
+                    ชื่อ-นามสกุล :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.user}
+                    </span>
                   </div>
+                  
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
@@ -372,13 +377,10 @@ function Waitingprocecd() {
                       <span class="sr-only">Send message</span>
                     </button>
                   </div>
-                  <div className="order-last">
-                    <Button
-                      onClick={() => navigate("/appointmentOF")}
-                      className=" text-[#091F59] shadow-lg bg-[#F2F0DE] hover:bg-white focus:outline-none focus:ring-1 focus:ring-black-30 font-bold rounded-md  text-xs  px-2 py-2.5 text-center dark:bg-[#091F59] dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      การนัดหมาย
-                    </Button>
+                  <div className='basis-1/4 inline-flex justify-center'>
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
+                      ยกเลิกรายการ
+                    </button>
                   </div>
                 </div>
               </form>
