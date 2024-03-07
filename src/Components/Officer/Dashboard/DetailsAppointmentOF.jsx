@@ -102,7 +102,12 @@ function DetailsAppointmentOF() {
         );
 
         console.log("Appointments:", response.data);
-        setAppointment(response.data);
+
+        // กรองข้อมูลการนัดหมายเพื่อแสดงเฉพาะ ID ที่ตรงกับ ID ที่คุณมี
+      const filteredAppointments = response.data.filter(
+        (item) => item.consultation_request_id === parseInt(id)
+      );
+      setAppointment(filteredAppointments);
       } catch (error) {
         console.error("Failed to fetch appointment:", error);
       }

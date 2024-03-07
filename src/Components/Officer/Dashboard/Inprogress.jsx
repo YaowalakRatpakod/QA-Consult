@@ -122,22 +122,33 @@ function Inprogress() {
         return;
       }
 
-      // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
-      if (!requestInfo || !requestInfo.user|| !infoUser.id) {
-        console.error("User ID is not available in request info");
+      const accessToken = localStorage.getItem("access_token");
+
+      // ดึงข้อมูลห้องจาก API endpoint ก่อนที่จะส่งข้อความ
+      const roomResponse = await axios.get(
+        `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!roomResponse.data[0].room) {
+        console.log(roomResponse.data[0].room);
         return;
       }
-      console.log(requestInfo.user);
 
-      const accessToken = localStorage.getItem("access_token");
-      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
+      console.log("Sender ID:", infoUser.id); // แสดง ID ของผู้ส่ง (แอดมิน)
+      console.log("Receiver ID:", requestInfo.user_id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
+      console.log("Room ID:", roomResponse.data[0].room);
 
       const sendMessageResponse = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: infoUser.id,
-          receiver: requestInfo.id,
-          room: requestInfo.id,
+          receiver: requestInfo.user_id,
+          room: roomResponse.data[0].room,
           message: adminComment,
         },
         {
@@ -148,7 +159,7 @@ function Inprogress() {
       );
       window.location.reload();
     } catch (error) {
-      console.error("Failed to send admin comment", error);
+      console.error("การส่งความคิดเห็นของแอดมินล้มเหลว", error);
     }
   };
 

@@ -78,7 +78,7 @@ function History() {
     const fetchAllRequest = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests/',
+        const response = await axios.get('http://127.0.0.1:8000/api/user-consultation-requests-user-all/',
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -92,6 +92,8 @@ function History() {
     };
     fetchAllRequest();
   }, []);
+
+  
   return (
     <div>
       <Header />
@@ -126,8 +128,8 @@ function History() {
                     <tr class="bg-[#F2F1DF] border-b dark:bg-[#F2F1DF] dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black">{request.topic_id}</th>
                     <td class="px-6 py-4">{getSectionInThai(request.topic_section)}</td>
-                    <td class="px-6 py-4">{request.user.full_name}</td>
-                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleString('th-TH')}</td>
+                    <td class="px-6 py-4">{request.user}</td>
+                    <td class="px-6 py-4">{new Date(request.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})}</td>
                     <td class="px-6 py-4"><Link to={`/completed/${request.id}`}>{getStatusInThai(request.status)}</Link></td>
                   </tr>
                   ))}  

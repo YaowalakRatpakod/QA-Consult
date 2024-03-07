@@ -148,7 +148,7 @@ function Waitingprocecd() {
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: requestInfo.user.id,
-          receiver: 1,
+          receiver: 21,
           room: requestInfo.id,
           message: userComment,
         },
