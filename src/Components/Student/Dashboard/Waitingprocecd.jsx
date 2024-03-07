@@ -85,7 +85,7 @@ function Waitingprocecd() {
       } catch (error) {
         console.error("Failed to fetch user info", error);
       }
-      
+
     };
     fetchUserInfo();
   }, []);
@@ -165,7 +165,7 @@ function Waitingprocecd() {
     }
   };
 
-  
+
   useEffect(() => {
     // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
     if (messages.length > 0) {
@@ -178,7 +178,7 @@ function Waitingprocecd() {
   const changeStatus = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
-  
+
       // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
       const response = await axios.put(
         `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
@@ -190,12 +190,12 @@ function Waitingprocecd() {
         }
       );
       // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
-  } catch (error) {
-    console.error("Failed to mark request as Processing", error);
-  }
-};
+    } catch (error) {
+      console.error("Failed to mark request as Processing", error);
+    }
+  };
 
-  
+
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
@@ -259,15 +259,11 @@ function Waitingprocecd() {
             <div className="bg-red-300 rounded-md mx-2 my-4 py-4 px-7">
               <div className="flex">
                 <div className="">
-                  <div
-                    className="text-black px-7 py-1 font-medium text-sm"
-                    name="name"
-                  >
-                    ชื่อ-นามสกุล :{" "}
-                    <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user.full_name}
-                    </span>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    รหัสนิสิต :{" "}
+                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
                     <span className="bg-white rounded-sm p-1">
@@ -280,31 +276,41 @@ function Waitingprocecd() {
                       {requestInfo.topic_id}
                     </span>
                   </div>
+                  <div className="text-black px-7 py-1 font-medium text-sm">
+                    เบอร์โทร :{" "}
+                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
+                  </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      {new Date(requestInfo.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
                       )}
                     </span>{" "}
                   </div>
                 </div>
                 <div className="">
-                  <div className="text-black px-7 py-1 font-medium text-sm">
-                    เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
+                  <div
+                    className="text-black px-7 py-1 font-medium text-sm"
+                    name="name"
+                  >
+                    ชื่อ-นามสกุล :{" "}
+                    <span className="bg-white rounded-sm p-1">
+                      {requestInfo.user.full_name}
+                    </span>
                   </div>
+
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     สาขา :{" "}
                     <span className="bg-white rounded-sm p-1">
-                    {userInfo.major === "SE" && "วิชาวิศวกรรมซอฟต์แวร์"}
-                    {userInfo.major === "CS" && "วิชาวิทยาการคอมพิวเตอร์"}
-                    {userInfo.major === "CPE" && "วิชาวิศวกรรมคอมพิวเตอร์"}
-                    {userInfo.major === "IT" && "วิชาเทคโนโลยีสารสนเทศ"}
-                    {userInfo.major === "BS" && "วิชาภูมิสารสนเทศศาสตร์"}
-                    {userInfo.major === "BBA" && "วิชาธุรกิจดิจิทัล"}
-                    {userInfo.major === "CG" && "วิชาคอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
-                    {userInfo.major === "BSC" && "วิชาวิทยาการข้อมูลและการประยุกต์"}
-                    {userInfo.major === "ICTE" && "วิชาเทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
+                      {userInfo.major === "SE" && "วิศวกรรมซอฟต์แวร์"}
+                      {userInfo.major === "CS" && "วิทยาการคอมพิวเตอร์"}
+                      {userInfo.major === "CPE" && "วิศวกรรมคอมพิวเตอร์"}
+                      {userInfo.major === "IT" && "เทคโนโลยีสารสนเทศ"}
+                      {userInfo.major === "BS" && "ภูมิสารสนเทศศาสตร์"}
+                      {userInfo.major === "BBA" && "ธุรกิจดิจิทัล"}
+                      {userInfo.major === "CG" && "คอมพิวเตอร์กราฟิกและมัลติมีเดีย"}
+                      {userInfo.major === "BSC" && "วิทยาการข้อมูลและการประยุกต์"}
+                      {userInfo.major === "ICTE" && "เทคโนโลยีสารสนเทศและสาขาวิชาภาษาอังกฤษ"}
                     </span>
                   </div>
                   <div className="px-7 py-1 font-medium text-sm">
@@ -348,31 +354,39 @@ function Waitingprocecd() {
                 <label for="userComment" class="sr-only">
                   Your message
                 </label>
-                <div class="flex items-center px-3 py-2 mr-40 ml-8 rounded-lg bg-gray-50 dark:bg-gray-700">
-                  <textarea
-                    id="userComment"
-                    rows="1"
-                    value={userComment}
-                    onChange={(e) => setUserComment(e.target.value)}
-                    class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="แสดงความคิดเห็น...."
-                  ></textarea>
-                  <button
-                    type="button"
-                    onClick={sendUserComment}
-                    class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
-                  >
-                    <svg
-                      class="w-5 h-5 rotate-90 rtl:-rotate-90"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 18 20"
+                <div className="flex flex-row">
+                  <div class="basis-3/4 flex items-center px-3 py-2 mr-8 ml-8 rounded-lg bg-gray-50 dark:bg-gray-700">
+                    <textarea
+                      id="userComment"
+                      rows="1"
+                      value={userComment}
+                      onChange={(e) => setUserComment(e.target.value)}
+                      class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="แสดงความคิดเห็น...."
+                    ></textarea>
+                    <button
+                      type="button"
+                      onClick={sendUserComment}
+                      class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600"
                     >
-                      <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-                    </svg>
-                    <span class="sr-only">Send message</span>
-                  </button>
+                      <svg
+                        class="w-5 h-5 rotate-90 rtl:-rotate-90"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 18 20"
+                      >
+                        <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+                      </svg>
+                      <span class="sr-only">Send message</span>
+                    </button>
+
+                  </div>
+                  <div className='basis-1/4 inline-flex justify-center'>
+                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
+                      ยกเลิกรายการ
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>

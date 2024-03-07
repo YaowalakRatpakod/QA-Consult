@@ -41,12 +41,12 @@ function Statistic() {
                 <div className='font-semibold text-[#091F59] text-2xl'>{completedRequestCount}</div>
                 <div className='font-semibold text-[#091F59]'>จำนวน</div>
               </div>
-              <div className='flex items-center'>
+              {/* <div className='flex items-center'>
                 <select value={filter} onChange={handleFilterChange} className="bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-base">
                   <option value="week">สัปดาห์</option>
                   <option value="month">เดือน</option>
                 </select>
-              </div>
+              </div> */}
             </div>
             <div className=''>
               <Linech filter={filter} />

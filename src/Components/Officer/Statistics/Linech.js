@@ -90,7 +90,7 @@ export default function Linech({ filter }) {
 
   return (
     <div>
-      <canvas ref={chartRef} style={{ width: "500px", height: "500px" }} />
+      <canvas ref={chartRef} style={{ width: "200px", height: "80px" }} />
     </div>
   );
 }
