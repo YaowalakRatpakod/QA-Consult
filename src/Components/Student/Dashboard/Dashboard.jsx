@@ -194,10 +194,16 @@ function Dashboard() {
                         <td class="px-6 py-4">
                           {getStatusInThai(request.status) ===
                             "กำลังดำเนินการ" ||
-                          getStatusInThai(request.status) === "Processing"
+                          getStatusInThai(request.status) === "Processing" ||
+                          getStatusInThai(request.status) === "การนัดหมาย" ||
+                          getStatusInThai(request.status) === "Appointment"
                             ? new Date(
                                 request.submission_date
-                              ).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})
+                              ).toLocaleDateString("th-TH", {
+                                year: "numeric",
+                                month: "numeric",
+                                day: "numeric",
+                              })
                             : null}
                         </td>
                         <td class="px-6 py-4">
@@ -216,7 +222,7 @@ function Dashboard() {
                             </Link>
                           ) : getStatusInThai(request.status) ===
                             "การนัดหมาย" ? (
-                            <Link to={`/appointment/${request.id}`}>
+                            <Link to={`/inprogress/${request.id}`}>
                               {" "}
                               {getStatusInThai(request.status)}{" "}
                             </Link>

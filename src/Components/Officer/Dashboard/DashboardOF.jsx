@@ -131,9 +131,21 @@ function DashboardOF() {
                     <td class="px-6 py-4">{getSectionInThai(request.topic_section)}</td>
                     <td class="px-6 py-4">{request.user}</td>
                     <td class="px-6 py-4">{new Date(request.received_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' })}</td>
-                    <td class="px-6 py-4">{getStatusInThai(request.status) === 'กำลังดำเนินการ' || getStatusInThai(request.status) === 'Processing' ?
-                        new Date(request.submission_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'})
-                        :null}</td>
+                    <td class="px-6 py-4">
+                          {getStatusInThai(request.status) ===
+                            "กำลังดำเนินการ" ||
+                          getStatusInThai(request.status) === "Processing" ||
+                          getStatusInThai(request.status) === "การนัดหมาย" ||
+                          getStatusInThai(request.status) === "Appointment"
+                            ? new Date(
+                                request.submission_date
+                              ).toLocaleDateString("th-TH", {
+                                year: "numeric",
+                                month: "numeric",
+                                day: "numeric",
+                              })
+                            : null}
+                        </td>
                     <td className="px-6 py-4">
                         {getStatusInThai(request.status) === "กำลังดำเนินการ" || getStatusInThai(request.status) === "Processing" ? (
                           <Link to={`/inprogressOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
@@ -149,7 +161,7 @@ function DashboardOF() {
                           request.appointment_date && request.status === "Appointment" ? (
                             <Link to={`/detailsAppointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
                           ) : (
-                            <Link to={`/appointmentOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
+                            <Link to={`/inprogressOF/${request.id}`}> {getStatusInThai(request.status)} </Link>
                           )
                         ) : (
                           <Link to={`/waitingOF/${request.id}`}> {getStatusInThai(request.status)} </Link>

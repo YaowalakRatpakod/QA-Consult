@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 function Completed() {
   const { id } = useParams();
   const [requestInfo, setRequestInfo] = useState(null);
+  const [appointment, setAppointment] = useState(null);
   const [userInfo, setUserInfo] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -135,6 +136,30 @@ function Completed() {
     fetchMessages();
   }, [id]);
 
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/appointments/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        console.log("Appointments:", response.data);
+        setAppointment(response.data);
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+
+    fetchAppointment();
+  }, [id]);
+
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
@@ -196,7 +221,7 @@ function Completed() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
-                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">{userInfo.student_id}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -286,11 +311,9 @@ function Completed() {
           </div>
         </div>
       </div>
+      <br></br>
       <div className="ltr">
-        <div className="flex flex-row  ms-28 p-4 text-medium text-black">
-          การนัดหมาย{" "}
-        </div>
-        <Link to="/dashboardOF">
+        <Link to="/history">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -337,31 +360,40 @@ function Completed() {
             </div>
 
             <div className="bg-green-100 rounded-md mx-2 my-4 py-4 px-7">
-
+            {appointment && appointment.length > 0 ? (
               <div>
-                <div
-                  className="text-black px-7 py-1 font-medium text-sm"
-                  name="name"
-                >
-                  นัดหมายวันที่ :{" "}
-                  <span className="bg-white rounded-sm p-1">
-                    {new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
-                    )}
-                  </span>
-                </div>
-                <div className="text-black px-7 py-1 font-medium text-sm">
-                  สถานที่ :{" "}
-                  <span className="bg-white rounded-sm p-1">
-
-                  </span>
-                </div>
-                <div className="px-7 py-1 font-medium text-sm">
-                  เวลาที่นัดหมาย :{" "}
-                  <span className="bg-white rounded-sm p-1">
-
-                  </span>
-                </div>
+              {appointment && (
+                  <div>
+                  {appointment.map((item, index) => (
+                      <div key={index}>
+                        <div
+                          className="text-black px-7 py-1 font-medium text-sm"
+                          name="name"
+                        >
+                          นัดหมายวันที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                          {new Date(item.appointment_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      )}
+                          </span>
+                        </div>
+                        <div className="text-black px-7 py-1 font-medium text-sm">
+                          สถานที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.location}
+                          </span>
+                        </div>
+                        <div className="px-7 py-1 font-medium text-sm">
+                          เวลาที่นัดหมาย :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.time}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
               </div>
+              ): null}
               <p className="text-gray-500 text-center font-medium">
                 ดำเนินการเสร็จสิ้น
               </p>

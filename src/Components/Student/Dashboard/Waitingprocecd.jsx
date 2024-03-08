@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import Header from "../../Layout/Header/Header";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+// import { useHistory } from "react-router";
 
 function Waitingprocecd() {
+  const navigate = useNavigate();
   const { id } = useParams();
+  // const history = useHistory();
   const [userInfo, setUserInfo] = useState("");
-  const [requestInfo, setRequestInfo] = useState(null);
+  const [requestInfo, setRequestInfo] = useState("");
   const [userComment, setUserComment] = useState(""); // เก็บข้อความ
   const [messages, setMessages] = useState([]); // เก็บข้อความทั้งหมดที่ได้รับจากคลังข้อมูล
 
@@ -66,13 +70,13 @@ function Waitingprocecd() {
   };
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchData = async () => {
       try {
         // ดึง token จาก localStorage
         const accessToken = localStorage.getItem("access_token");
 
         // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
-        const response = await axios.get(
+        const userResponse = await axios.get(
           "http://127.0.0.1:8000/api/v1/auth/users/me/",
           {
             headers: {
@@ -81,23 +85,8 @@ function Waitingprocecd() {
           }
         );
 
-        setUserInfo(response.data);
-      } catch (error) {
-        console.error("Failed to fetch user info", error);
-      }
-
-    };
-    fetchUserInfo();
-  }, []);
-
-  useEffect(() => {
-    const fetchRequestInfo = async () => {
-      try {
-        // ดึง token จาก localStorage
-        const accessToken = localStorage.getItem("access_token");
-
-        // ใช้ token เพื่อดึงข้อมูลผู้ใช้จาก Django backend
-        const response = await axios.get(
+        // ใช้ token เพื่อดึงข้อมูลคำขอจาก Django backend
+        const requestResponse = await axios.get(
           `http://127.0.0.1:8000/api/user-consultation-requests/${id}`,
           {
             headers: {
@@ -106,24 +95,15 @@ function Waitingprocecd() {
           }
         );
 
-        console.log("check fetch : ", response.data);
+        setUserInfo(userResponse.data);
+        setRequestInfo(requestResponse.data);
 
-        setRequestInfo(response.data);
-        if (response.data && response.data.user_comment) {
-          setUserComment(response.data.user_comment);
+        if (requestResponse.data && requestResponse.data.user_comment) {
+          setUserComment(requestResponse.data.user_comment);
         }
-      } catch (error) {
-        console.error("Failed to fetch request info", error);
-      }
-    };
-    fetchRequestInfo();
-  }, [id]);
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        const response = await axios.get(
+        // ใช้ token เพื่อดึงข้อมูลข้อความจาก Django backend
+        const messageResponse = await axios.get(
           `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
           {
             headers: {
@@ -132,24 +112,43 @@ function Waitingprocecd() {
           }
         );
 
-        setMessages(response.data);
+        setMessages(messageResponse.data);
       } catch (error) {
-        console.error("Failed to fetch messages", error);
+        console.error("Failed to fetch data", error);
       }
     };
-    fetchMessages();
+
+    fetchData();
   }, [id]);
 
   const sendUserComment = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
 
+      // ดึงข้อมูลห้องจาก API endpoint ก่อนที่จะส่งข้อความ
+      const roomResponse = await axios.get(
+        `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!roomResponse.data[0].room) {
+        console.log(roomResponse.data[0].room);
+        return;
+      }
+
+      
+      console.log("Receiver ID:", requestInfo.id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
+
       const response = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: requestInfo.user.id,
-          receiver: 21,
-          room: requestInfo.id,
+          receiver:  1,
+          room: roomResponse.data[0].room,
           message: userComment,
         },
         {
@@ -158,47 +157,34 @@ function Waitingprocecd() {
           },
         }
       );
-
       window.location.reload();
+
     } catch (error) {
       console.error("Failed to send user comment", error);
     }
   };
 
-
-  useEffect(() => {
-    // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
-    if (messages.length > 0) {
-      // ทำการเปลี่ยนสถานะเป็น "กำลังดำเนินการ"
-      changeStatus();
-    }
-  }, [messages]);
-
-  // เปลี่ยนสถานะ
-  const changeStatus = async () => {
+  const cancelRequest = async (e) => {
     try {
+      e.preventDefault();
       const accessToken = localStorage.getItem("access_token");
-
-      // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
-      const response = await axios.put(
-        `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
-        { new_status: "Processing" }, // ส่งข้อมูลใหม่เพื่ออัปเดตสถานะ
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
+  
+      const confirmDelete = window.confirm("คุณต้องการลบรายการนี้หรือไม่?");
+      if (confirmDelete) {
+        const response = await axios.delete(
+          `http://127.0.0.1:8000/api/cancel-request/${id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        navigate('/dashboard');
+      }
     } catch (error) {
-      console.error("Failed to mark request as Processing", error);
+      console.error("Failed to cancel request:", error);
     }
   };
-
-
-  if (!requestInfo) {
-    return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
-  }
 
   return (
     <div>
@@ -261,7 +247,7 @@ function Waitingprocecd() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
-                    <span className="bg-white rounded-sm p-1">{userInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">{userInfo.student_id}</span>
                   </div>
 
                   <div className="text-black px-7 py-1 font-medium text-sm">
@@ -295,7 +281,7 @@ function Waitingprocecd() {
                   >
                     ชื่อ-นามสกุล :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {requestInfo.user.full_name}
+                      {userInfo.full_name}
                     </span>
                   </div>
 
@@ -383,7 +369,7 @@ function Waitingprocecd() {
 
                   </div>
                   <div className='basis-1/4 inline-flex justify-center'>
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
+                    <button onClick={cancelRequest} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
                       ยกเลิกรายการ
                     </button>
                   </div>

@@ -146,7 +146,7 @@ function Inprogress() {
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: requestInfo.user.id,
-          receiver: 21,
+          receiver: 1,
           room: requestInfo.id,
           message: userComment,
         },
@@ -210,7 +210,53 @@ function Inprogress() {
     }
   };
 
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/appointments/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
+        console.log("Appointments:", response.data);
+        setAppointment(response.data);
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+
+    fetchAppointment();
+  }, [id]);
+
+  const handleReschedule = async (e) => {
+    try {
+      e.preventDefault();
+      const accessToken = localStorage.getItem("access_token");
+  
+      // ลบการนัดหมายเดิม
+      const deleteResponse = await axios.delete(
+        `http://127.0.0.1:8000/api/appointments/${id}/cancel/`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      window.location.reload();
+      // ทำการเปลี่ยนเส้นทางไปยังหน้า appointment
+      navigate(`/inprogress/${requestInfo.id}`);
+  
+    } catch (error) {
+      console.error("Failed to reschedule appointment", error);
+    }
+  };
 
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -246,7 +292,7 @@ function Inprogress() {
             <div className='bg-orange-300 rounded-md mx-2 my-4 py-4 px-7'>
               <div className='flex'>
                 <div className=''>
-                  <div className='text-black px-7 py-1 font-medium text-sm'>รหัสนิสิต : <span className='bg-white rounded-sm p-1'>{userInfo.tel}</span></div>
+                  <div className='text-black px-7 py-1 font-medium text-sm'>รหัสนิสิต : <span className='bg-white rounded-sm p-1'>{userInfo.student_id}</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>คณะ : <span className='bg-white rounded-sm p-1'>เทคโนโลยีสารสนเทศและการสื่อสาร</span></div>
                   <div className='px-7 py-1 font-medium text-sm' >รหัสหัวข้อ: <span className='bg-white rounded-sm p-1'>{requestInfo.topic_id}</span></div>
                   <div className='text-black px-7 py-1 font-medium text-sm'>เบอร์โทร : <span className='bg-white rounded-sm p-1'>{userInfo.tel}</span></div>
@@ -348,30 +394,7 @@ function Inprogress() {
               </svg> รายละเอียด</div>
 
             <div className='bg-yellow-100 rounded-md mx-2 my-4 py-4 px-7'>
-              <div>
-                <div
-                  className="text-black px-7 py-1 font-medium text-sm"
-                  name="name"
-                >
-                  นัดหมายวันที่ :{" "}
-                  <span className="bg-white rounded-sm p-1">
-                    {new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
-                    )}
-                  </span>
-                </div>
-                <div className="text-black px-7 py-1 font-medium text-sm">
-                        สถานที่ :{" "}
-                        <span className="bg-white rounded-sm p-1">
-                          
-                        </span>
-                      </div>
-                      <div className="px-7 py-1 font-medium text-sm">
-                        เวลาที่นัดหมาย :{" "}
-                        <span className="bg-white rounded-sm p-1">
-                          
-                        </span>
-                      </div>
-              </div>
+                
               {appointment && (
                 <div>
                   {appointment.map((item, index) => (
@@ -404,7 +427,7 @@ function Inprogress() {
               )}
 
               <div className='flex justify-center'>
-                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  mt-8 ">
+                <button onClick={handleReschedule} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  mt-8 ">
                   เลื่อนเวลานัดหมาย
                 </button>
               </div>

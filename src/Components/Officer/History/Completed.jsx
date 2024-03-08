@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 function Completed() {
   const { id } = useParams();
   const [requestInfo, setRequestInfo] = useState(null);
-  const [adminComment, setAdminComment] = useState(""); // เก็บข้อความ
+  const [appointment, setAppointment] = useState(null);
   const [messages, setMessages] = useState([]);
 
   const getSectionInThai = (topic_section) => {
@@ -104,54 +104,12 @@ function Completed() {
         );
 
         setRequestInfo(response.data);
-        if (response.data && response.data.admin_comment) {
-          setAdminComment(response.data.admin_comment);
-        }
       } catch (error) {
         console.error("Failed to fetch request info", error);
       }
     };
     fetchRequestInfo();
   }, [id]);
-
-  const sendAdminComment = async () => {
-    try {
-      if (!adminComment.trim()) {
-        console.error("Admin comment is empty");
-        return;
-      }
-
-      // เช็คว่า requestInfo มีค่าและมี property user และ id หรือไม่
-      if (!requestInfo || !requestInfo.user || !infoUser.id) {
-        console.error("User ID is not available in request info");
-        return;
-      }
-      console.log(id)
-
-      const accessToken = localStorage.getItem("access_token");
-      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
-
-
-
-      const sendMessageResponse = await axios.post(
-        "http://127.0.0.1:8000/api/send-messages/",
-        {
-          sender: infoUser.id,
-          receiver: id,
-          room: requestInfo.id,
-          message: adminComment,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      );
-      window.location.reload();
-    } catch (error) {
-      console.error("Failed to send admin comment", error);
-    }
-  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -168,6 +126,35 @@ function Completed() {
       }
     };
     fetchMessages();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      try {
+        // ดึง token จาก localStorage
+        const accessToken = localStorage.getItem("access_token");
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/appointments/?consultation_request_id=${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        console.log("Appointments:", response.data);
+
+        // กรองข้อมูลการนัดหมายเพื่อแสดงเฉพาะ ID ที่ตรงกับ ID ที่คุณมี
+      const filteredAppointments = response.data.filter(
+        (item) => item.consultation_request_id === parseInt(id)
+      );
+      setAppointment(filteredAppointments);
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      }
+    };
+
+    fetchAppointment();
   }, [id]);
 
 
@@ -234,7 +221,7 @@ function Completed() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">{requestInfo.student_id}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -317,8 +304,6 @@ function Completed() {
                   คอมเมนต์
                   {/* <p className='bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1'></p> */}
                   <p
-                    value={adminComment}
-                    onChange={(e) => setAdminComment(e.target.value)}
                     className="bg-white w-full h-32 mr-10 rounded-md  font-medium text-sm form-control form-control-lg px-1 py-1 overflow-auto"
                   >
                     {/* แสดงข้อความที่ได้รับจากคลังข้อมูล */}
@@ -341,7 +326,7 @@ function Completed() {
         <div className="flex flex-row  ms-28 p-4 text-medium text-black">
           การนัดหมาย{" "}
         </div>
-        <Link to="/dashboardOF">
+        <Link to="/historyOF">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -390,28 +375,36 @@ function Completed() {
             <div className="bg-green-100 rounded-md mx-2 my-4 py-4 px-7">
 
               <div>
-                <div
-                  className="text-black px-7 py-1 font-medium text-sm"
-                  name="name"
-                >
-                  นัดหมายวันที่ :{" "}
-                  <span className="bg-white rounded-sm p-1">
-                    {new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric' }
-                    )}
-                  </span>
-                </div>
-                <div className="text-black px-7 py-1 font-medium text-sm">
-                  สถานที่ :{" "}
-                  <span className="bg-white rounded-sm p-1">
-
-                  </span>
-                </div>
-                <div className="px-7 py-1 font-medium text-sm">
-                  เวลาที่นัดหมาย :{" "}
-                  <span className="bg-white rounded-sm p-1">
-
-                  </span>
-                </div>
+              {appointment && (
+                  <div>
+                  {appointment.map((item, index) => (
+                      <div key={index}>
+                        <div
+                          className="text-black px-7 py-1 font-medium text-sm"
+                          name="name"
+                        >
+                          นัดหมายวันที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                          {new Date(item.appointment_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'numeric', day: 'numeric'}
+                      )}
+                          </span>
+                        </div>
+                        <div className="text-black px-7 py-1 font-medium text-sm">
+                          สถานที่ :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.location}
+                          </span>
+                        </div>
+                        <div className="px-7 py-1 font-medium text-sm">
+                          เวลาที่นัดหมาย :{" "}
+                          <span className="bg-white rounded-sm p-1">
+                            {item.time}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  )}
               </div>
               <p className="text-gray-500 text-center font-medium">
                   ดำเนินการเสร็จสิ้น

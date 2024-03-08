@@ -14,10 +14,12 @@ function Createreq() {
   const [date, setDate] = useState("");
   const [userInfo, setUserInfo] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  const [newTel, setNewTel] = useState('');
   const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-    setTopic(event.target.value);
-    setTopicId(event.target.value);
+    const selectedOption = event.target.value;
+    setSelectedOption(selectedOption);
+    setTopic(selectedOption);
+    setTopicId(selectedOption);
   };
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -88,6 +90,34 @@ function Createreq() {
     }
   };
 
+  const handleTelUpdate = async () => {
+    const accessToken = localStorage.getItem("access_token");
+    try {
+        const newPhoneNumber = window.prompt("กรุณากรอกเบอร์โทรใหม่:");
+        
+        if (newPhoneNumber !== null) {
+            const response = await fetch(`http://127.0.0.1:8000/api/update-user-tel/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({ tel: newPhoneNumber })
+            });
+
+            if (response.ok) {
+                console.log('อัปเดตเบอร์โทรสำเร็จ');
+                
+                // รีเฟรชหน้าเพจเพื่อแสดงค่าเบอร์โทรใหม่
+                window.location.reload();
+            } else {
+                console.error('เกิดข้อผิดพลาดในการอัปเดตเบอร์โทร');
+            }
+        }
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาด:', error);
+    }
+};
   return (
     <div>
       <Header />
@@ -150,7 +180,7 @@ function Createreq() {
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
                     <span className="bg-white rounded-sm p-1">
-                      {userInfo.tel}
+                      {userInfo.student_id}
                     </span>
                   </div>
 
@@ -163,48 +193,19 @@ function Createreq() {
                   <div
                     className="px-7 py-1 font-medium text-sm"
                     value={topicid}
-                    onChange={(e) => setTopicId(e.target.value)}
-                  >
-                    รหัสหัวข้อ:
-                    <select
-                      value={selectedOption}
-                      onChange={handleChange}
-                      id="countries"
-                      class="bg-white rounded-sm w-25 py-2.3 px-2 py-1 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
-                    >
-                      <option selected>เลือกรหัสหัวข้อ...</option>
-                      <option value="ADM01">ADM01</option>
-                      <option value="ADM02">ADM02</option>
-                      <option value="ADM03">ADM03</option>
-                      <option value="REG04">REG04</option>
-                      <option value="REG05">REG05</option>
-                      <option value="UP01">UP01</option>
-                      <option value="UP02">UP02</option>
-                      <option value="UP03">UP03</option>
-                      <option value="UP03.1">UP03.1</option>
-                      <option value="UP05">UP05</option>
-                      <option value="UP06">UP06</option>
-                      <option value="UP07">UP07</option>
-                      <option value="UP08">UP08</option>
-                      <option value="UP09">UP09</option>
-                      <option value="UP10">UP10</option>
-                      <option value="UP11">UP11</option>
-                      <option value="UP13">UP13</option>
-                      <option value="UP14">UP14</option>
-                      <option value="UP17">UP17</option>
-                      <option value="UP18">UP18</option>
-                      <option value="UP20.1">UP20.1</option>
-                      <option value="UP24">UP24</option>
-                      <option value="UP25">UP25</option>
-                      <option value="UP29">UP29</option>
-                      <option value="UP30">UP30</option>
-                    </select>
+                    onChange={(e) => setTopicId(e.target.value)}>
+                    รหัสหัวข้อ: {topicid}
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
                     <span className="bg-white rounded-sm p-1">
                       {userInfo.tel}
                     </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"
+                    onClick={() => handleTelUpdate()}>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+
                   </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:
@@ -252,6 +253,7 @@ function Createreq() {
                     <select
 
                       onChange={handleChange}
+                      
                       id="countries"
                       class="bg-white rounded-sm py-1 w-50 py-2.3 px-2 font-medium text-sm text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]:"
                     >

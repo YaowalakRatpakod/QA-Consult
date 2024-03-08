@@ -10,6 +10,7 @@ function Inprogress() {
   const [requestInfo, setRequestInfo] = useState(null);
   const [adminComment, setAdminComment] = useState(""); // เก็บข้อความ
   const [messages, setMessages] = useState([]);
+  const [showAppointment, setShowAppointment] = useState(false);
   // การนัดหมาย
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
@@ -144,10 +145,6 @@ function Inprogress() {
         return;
       }
 
-      console.log("Sender ID:", infoUser.id); // แสดง ID ของผู้ส่ง (แอดมิน)
-      console.log("Receiver ID:", requestInfo.user_id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
-      console.log("Room ID:", roomResponse.data[0].room);
-
       const sendMessageResponse = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
@@ -190,9 +187,9 @@ function Inprogress() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const accessToken = localStorage.getItem("access_token");
-
+  
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/appointments/",
@@ -208,19 +205,20 @@ function Inprogress() {
           },
         }
       );
-
+  
       console.log(response.data); // ประมวลผลการส่งข้อมูลจาก API
-      navigate(`/detailsAppointmentOF/${requestInfo.id}`);
+  
+      // เปลี่ยนสถานะเป็น "Appointment"
+      await changeStatus();
     } catch (error) {
       console.error("Failed to create appointment", error);
     }
   };
-
-  // เปลี่ยนสถานะ
+  
   const changeStatus = async () => {
     try {
       const accessToken = localStorage.getItem("access_token");
-
+  
       // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
       const response = await axios.put(
         `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
@@ -231,14 +229,20 @@ function Inprogress() {
           },
         }
       );
-      // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
-      navigate("/dashboardOF");
+      // ทำการเด้งไปยังหน้าที่กำหนด
+      navigate(`/detailsAppointmentOF/${requestInfo.id}`);
     } catch (error) {
       console.error("Failed to mark request as completed", error);
     }
   };
 
+  const toggleAppointment = () => {
+    setShowAppointment(!showAppointment);
+  };
+
+  
   if (!requestInfo) {
+
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
   }
 
@@ -304,7 +308,7 @@ function Inprogress() {
                 <div className="">
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
-                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                    <span className="bg-white rounded-sm p-1">{requestInfo.student_id}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -320,7 +324,7 @@ function Inprogress() {
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     เบอร์โทร :{" "}
-                    <span className="bg-white rounded-sm p-1">0612548848</span>
+                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
                   </div>
                   <div class="px-7 py-1 font-medium text-sm">
                     วันที่:{" "}
@@ -426,38 +430,18 @@ function Inprogress() {
                     </button>
                   </div>
                   <div className='basis-1/4 inline-flex justify-center'>
-                    <button type="button" onClick={changeStatus} className=" bg-[#F2F0DE] shadow-lg hover:bg-orange-400 text-[#091F59] font-bold py-2 px-4 rounded-md  ">การนัดหมาย</button>
+                    <button type="button" onClick={toggleAppointment} className=" bg-[#F2F0DE] shadow-lg hover:bg-orange-400 text-[#091F59] font-bold py-2 px-4 rounded-md  ">การนัดหมาย</button>
                   </div>
                 </div>
               </form>
             </div>
           </div>
         </div>
-      </div>
-      <div className="ltr">
-        <div className="flex flex-row  ms-28 p-4 text-medium text-black">
-          การนัดหมาย{" "}
-        </div>
-        <Link to="/dashboardOF">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="absolute top-24 right-32 w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
-        </Link>
-      </div>
+      </div> 
+      <br></br>
 
       <div className="flex flex-col items-center justify-around ">
-        {/* <div className='flex justify-center w-full'></div> */}
+      {showAppointment && (
         <div className="mx-auto w-4/5 h-full  ">
           <div className="rounded-lg shadow-lg border border-black bg-white -mt-35 pb-px pr-px md:py30  md:px-5 ">
             <div className="flex">
@@ -536,13 +520,7 @@ function Inprogress() {
                       type="button"
                       className=" bg-blue-900 shadow-lg hover:bg-[#091F59]  text-white font-bold py-2 px-4 rounded  mt-8 mx-2"
                     >
-                      การนัดหมาย
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  mt-8 mx-2">
-                      เลื่อนเวลานัดหมาย
-                    </button>
-                    <button className="bg-orange-300 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded  mt-8 mx-2">
-                      เสร็จสิ้น
+                      นัดหมาย
                     </button>
                   </div>
                 </div>
@@ -550,6 +528,7 @@ function Inprogress() {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>

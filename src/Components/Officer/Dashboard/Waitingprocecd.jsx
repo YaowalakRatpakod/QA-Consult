@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Header from "../../Layout/Header/Headeroffice";
 import { Button } from "flowbite-react";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Waitingprocecd() {
   const navigate = useNavigate();
@@ -115,6 +116,33 @@ function Waitingprocecd() {
     fetchRequestInfo();
   }, [id]);
 
+  const cancelRequest = async (e) => {
+    try {
+      e.preventDefault();
+      const accessToken = localStorage.getItem("access_token");
+  
+      // ใช้ window.confirm() เพื่อแสดง dialog แจ้งเตือน
+      const confirmDelete = window.confirm("คุณต้องการลบรายการนี้หรือไม่?");
+  
+      // หากผู้ใช้กดตกลง (OK)
+      if (confirmDelete) {
+        const response = await axios.delete(
+          `http://127.0.0.1:8000/api/cancel-request/${id}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+       // กลับไปยังหน้า dashboard
+        navigate('/dashboardOF');
+      }
+    } catch (error) {
+      console.error("Failed to cancel request:", error);
+    }
+  };
+  
+
   const sendAdminComment = async () => {
     try {
       if (!adminComment.trim()) {
@@ -124,31 +152,13 @@ function Waitingprocecd() {
 
       const accessToken = localStorage.getItem("access_token");
 
-      // ดึงข้อมูลห้องจาก API endpoint ก่อนที่จะส่งข้อความ
-      const roomResponse = await axios.get(
-        `http://127.0.0.1:8000/api/consultation-requests/${id}/chats/`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!roomResponse.data[0].room) {
-        console.log(roomResponse.data[0].room);
-        return;
-      }
-
-      console.log("Sender ID:", infoUser.id); // แสดง ID ของผู้ส่ง (แอดมิน)
-      console.log("Receiver ID:", requestInfo.user_id); // แสดง ID ของผู้รับ (ผู้สร้างคำขอ)
-      // const loggedInAdmin = JSON.parse(localStorage.getItem("admin_info"));
 
       const sendMessageResponse = await axios.post(
         "http://127.0.0.1:8000/api/send-messages/",
         {
           sender: infoUser.id,
           receiver: requestInfo.user_id,
-          room: roomResponse.data[0].room,
+          room: requestInfo.id,
           message: adminComment,
         },
         {
@@ -160,6 +170,35 @@ function Waitingprocecd() {
       window.location.reload();
     } catch (error) {
       console.error("การส่งความคิดเห็นของแอดมินล้มเหลว", error);
+    }
+  };
+
+  useEffect(() => {
+    // ตรวจสอบว่ามีข้อความใหม่เข้ามาหรือไม่
+    if (messages.length > 0) {
+      // ทำการเปลี่ยนสถานะเป็น "กำลังดำเนินการ"
+      changeStatus();
+    }
+  }, [messages]);
+
+  // เปลี่ยนสถานะ
+  const changeStatus = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // ส่งคำขอการเปลี่ยนแปลงสถานะไปยัง API endpoint ที่เราสร้างใน Django
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/user-consultation-requests/${id}/updates`,
+        { new_status: "Processing" }, // ส่งข้อมูลใหม่เพื่ออัปเดตสถานะ
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      // ทำการโหลดหน้าใหม่หลังจากเปลี่ยนแปลงสถานะเรียบร้อย
+    } catch (error) {
+      console.error("Failed to mark request as Processing", error);
     }
   };
 
@@ -182,6 +221,9 @@ function Waitingprocecd() {
     };
     fetchMessages();
   }, [id]);
+
+  
+
 
   if (!requestInfo) {
     return <div>Loading...</div>; // แสดง Loading ขณะที่รอข้อมูลจาก API
@@ -248,7 +290,7 @@ function Waitingprocecd() {
                 <div className="">
                 <div className="text-black px-7 py-1 font-medium text-sm">
                     รหัสนิสิต :{" "}
-                    <span className="bg-white rounded-sm p-1">{requestInfo.tel}</span>
+                    <span className="bg-white rounded-sm p-1">{requestInfo.student_id}</span>
                   </div>
                   <div className="text-black px-7 py-1 font-medium text-sm">
                     คณะ :{" "}
@@ -378,7 +420,7 @@ function Waitingprocecd() {
                     </button>
                   </div>
                   <div className='basis-1/4 inline-flex justify-center'>
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
+                    <button  onClick={cancelRequest} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded  ">
                       ยกเลิกรายการ
                     </button>
                   </div>

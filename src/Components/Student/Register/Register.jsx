@@ -21,6 +21,7 @@ const Register = (event) => {
     password: "",
     re_password: "",
     major:"",
+    student_id: "",
   });
 
   const [errors, setErrors] = useState({
@@ -30,9 +31,10 @@ const Register = (event) => {
     password: false,
     re_password: false,
     major:false,
+    student_id: false,
   })
 
-  const { full_name,phone, email, password, re_password} = formData;
+  const { full_name,phone, email, password, re_password,student_id} = formData;
 
   const handleChange = async (event) => {
     setFormData((prev) => ({
@@ -95,6 +97,7 @@ const Register = (event) => {
           password: "",
           re_password: "",
           major: "",
+          student_id: "",
         });
   
         navigate("/");
@@ -121,6 +124,21 @@ const Register = (event) => {
           ให้คำแนะนำและแก้ไขปัญหาได้อย่างรวดเร็ว
         </div>
         <form>
+        <div className="px-7 py-1">
+            <div className="font-regular text-sm text-[#091F59]">
+              รหัสนิสิต
+              <input
+                type="text"
+                name="student_id"
+                onChange={handleChange}
+                required
+                className={`block w-72 py-2.3 px-0 text-sm text-black bg-transparent border-0 border-b-2 ${
+                  errors.tel && 'border-red-500'
+                } appearance-none dark:focus:to-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer-[]`}
+
+              />
+            </div>
+          </div>
           <div className="px-7 py-1">
             {/* check ได้ว่ากรอกข้อมูลขึ้นถูกมั้ย  */}
             {/* <pre>{ JSON.stringify(formValues, undefined,2)}</pre>  */}
@@ -139,6 +157,7 @@ const Register = (event) => {
               />
             </div>
           </div>
+          
           <div className="px-7 py-1">
             <div className="font-regular text-sm text-[#091F59]">
               คณะ
@@ -181,6 +200,7 @@ const Register = (event) => {
               </select>
             </div>
           </div>
+         
           <div className="px-7 py-1">
             <div className="font-regular text-sm text-[#091F59]">
               เบอร์โทร
